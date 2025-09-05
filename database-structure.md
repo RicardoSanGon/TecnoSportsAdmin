@@ -1,0 +1,104 @@
+# Estructura de la Base de Datos - API de Partidos con Quinelas y Usuarios
+
+Esta es la  estructura de la base de datos para la API de TecnoSportsAdmin, que maneja partidos de fútbol, quinelas (pools), usuarios y predicciones. La base de datos está diseñada para permitir a los usuarios crear y unirse a quinelas mediante códigos de invitación, hacer predicciones semanales sobre partidos y mantener clasificaciones por quinela.
+
+## Tablas Principales
+
+### 1. Tabla: `users`
+Almacena la información de los usuarios registrados en la plataforma.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único del usuario     | PRIMARY KEY, AUTO_INCREMENT  |
+| name           | VARCHAR(255)  | Nombre completo del usuario         | NOT NULL                     |
+| email          | VARCHAR(255)  | Correo electrónico                  | UNIQUE, NOT NULL             |
+| password       | VARCHAR(255)  | Contraseña hasheada                 | NOT NULL                     |
+| created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
+| updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
+### 2. Tabla: `teams`
+Almacena la información de los equipos de fútbol participantes.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único del equipo      | PRIMARY KEY, AUTO_INCREMENT  |
+| name           | VARCHAR(255)  | Nombre del equipo                   | UNIQUE, NOT NULL             |
+| logo_url       | VARCHAR(500)  | URL del logo del equipo             | NULL                         |
+| created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
+| updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
+### 3. Tabla: `matches`
+Almacena la información de los partidos de fútbol programados.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único del partido     | PRIMARY KEY, AUTO_INCREMENT  |
+| home_team_id   | INTEGER       | ID del equipo local                 | FOREIGN KEY -> teams(id), NOT NULL |
+| away_team_id   | INTEGER       | ID del equipo visitante             | FOREIGN KEY -> teams(id), NOT NULL |
+| match_date     | TIMESTAMP     | Fecha y hora del partido            | NOT NULL                     |
+| week_number    | INTEGER       | Número de semana del torneo         | NOT NULL                     |
+| result         | VARCHAR(10)   | Resultado final (e.g., "2-1")       | NULL                         |
+| status         | VARCHAR(20)   | Estado del partido (pending, finished) | DEFAULT 'pending'           |
+| created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
+| updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
+### 4. Tabla: `pools` (Quinelas)
+Almacena la información de las quinelas creadas por los usuarios.
+
+| Campo              | Tipo          | Descripción                          | Restricciones                  |
+|--------------------|---------------|--------------------------------------|-------------------------------|
+| id                 | INTEGER       | Identificador único de la quinela   | PRIMARY KEY, AUTO_INCREMENT  |
+| name               | VARCHAR(255)  | Nombre de la quinela                | NOT NULL                     |
+| description        | TEXT          | Descripción de la quinela           | NULL                         |
+| creator_id         | INTEGER       | ID del usuario creador              | FOREIGN KEY -> users(id), NOT NULL |
+| invitation_code    | VARCHAR(10)   | Código de invitación único          | UNIQUE, NOT NULL             |
+| max_participants   | INTEGER       | Número máximo de participantes      | DEFAULT 20                   |
+| start_week         | INTEGER       | Semana de inicio                    | NOT NULL                     |
+| end_week           | INTEGER       | Semana de fin                       | NULL                         |
+| is_active          | BOOLEAN       | Si la quinela está activa           | DEFAULT TRUE                 |
+| created_at         | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
+| updated_at         | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
+### 5. Tabla: `pool_participants`
+Relaciona usuarios con quinelas a las que se han unido.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único de la participación | PRIMARY KEY, AUTO_INCREMENT  |
+| pool_id        | INTEGER       | ID de la quinela                     | FOREIGN KEY -> pools(id), NOT NULL |
+| user_id        | INTEGER       | ID del usuario participante          | FOREIGN KEY -> users(id), NOT NULL |
+| joined_at      | TIMESTAMP     | Fecha de unión                       | DEFAULT CURRENT_TIMESTAMP    |
+
+### 6. Tabla: `predictions`
+Almacena las predicciones de los usuarios para los partidos.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único de la predicción| PRIMARY KEY, AUTO_INCREMENT  |
+| user_id        | INTEGER       | ID del usuario que predice          | FOREIGN KEY -> users(id), NOT NULL |
+| match_id       | INTEGER       | ID del partido                      | FOREIGN KEY -> matches(id), NOT NULL |
+| pool_id        | INTEGER       | ID de la quinela                    | FOREIGN KEY -> pools(id), NOT NULL |
+| prediction     | VARCHAR(20)   | Predicción (home, draw, away)       | NOT NULL                     |
+| points         | INTEGER       | Puntos obtenidos (calculados)       | DEFAULT 0                    |
+| created_at     | TIMESTAMP     | Fecha de creación de la predicción  | DEFAULT CURRENT_TIMESTAMP    |
+| updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
+### 7. Tabla: `leaderboard`
+Almacena la clasificación de usuarios por quinela.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único de la entrada   | PRIMARY KEY, AUTO_INCREMENT  |
+| pool_id        | INTEGER       | ID de la quinela                    | FOREIGN KEY -> pools(id), NOT NULL |
+| user_id        | INTEGER       | ID del usuario                      | FOREIGN KEY -> users(id), NOT NULL |
+| total_points   | INTEGER       | Puntos totales acumulados           | DEFAULT 0                    |
+| position       | INTEGER       | Posición en la clasificación        | NULL                         |
+| updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
+## Relaciones
+
+- **Usuarios y Quinelas**: Un usuario puede crear múltiples quinelas y unirse a varias mediante códigos de invitación.
+- **Predicciones**: Las predicciones se hacen al inicio de la semana para todos los partidos de esa semana. Solo participantes de la quinela pueden predecir.
+- **Clasificación**: Se calcula automáticamente basada en los puntos de las predicciones correctas (ej. 3 puntos por acierto exacto, 1 por resultado correcto).
+- **Partidos**: Los partidos están asociados a semanas, permitiendo predicciones semanales.
+- **Invitaciones**: Los códigos de invitación son únicos por quinela y permiten unirse sin invitación directa.
