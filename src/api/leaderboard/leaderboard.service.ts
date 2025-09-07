@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
 import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Leaderboard } from './schemas/leaderboard.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class LeaderboardService {
+  constructor(
+    @InjectModel(Leaderboard.name) private leaderboardModel: Model<Leaderboard>,
+  ) {}
+
   create(createLeaderboardDto: CreateLeaderboardDto) {
     return 'This action adds a new leaderboard';
   }

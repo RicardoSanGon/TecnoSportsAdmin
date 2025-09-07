@@ -1,4 +1,3 @@
-import { Leaderboard } from 'src/api/leaderboard/entities/leaderboard.entity';
 import { Prediction } from 'src/api/predictions/entities/prediction.entity';
 import { User } from 'src/api/users/entities/user.entity';
 import { EntityBase } from 'src/base.entity';
@@ -38,7 +37,4 @@ export class Pool extends EntityBase {
 
   @OneToMany(() => Prediction, (prediction) => prediction.pool)
   predictions: Prediction[];
-
-  @OneToMany(() => Leaderboard, (leaderboards) => leaderboards.pool)
-  leaderboards: Leaderboard[];
 }

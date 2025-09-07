@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Leaderboard } from 'src/api/leaderboard/entities/leaderboard.entity';
 import { Pool } from 'src/api/pools/entities/pool.entity';
 import { Prediction } from 'src/api/predictions/entities/prediction.entity';
 import { Role } from 'src/api/roles/entities/role.entity';
@@ -42,7 +40,4 @@ export class User extends EntityBase {
 
   @OneToMany(() => Prediction, (prediction) => prediction.user)
   predictions: Prediction[];
-
-  @OneToMany(() => Leaderboard, (leaderboards) => leaderboards.user)
-  leaderboards: Leaderboard[];
 }

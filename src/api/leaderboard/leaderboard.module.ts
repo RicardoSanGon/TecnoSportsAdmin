@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
 import { LeaderboardService } from './leaderboard.service';
 import { LeaderboardController } from './leaderboard.controller';
-import { Leaderboard } from './entities/leaderboard.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Leaderboard, LeaderboardSchema } from './schemas/leaderboard.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Leaderboard])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Leaderboard.name, schema: LeaderboardSchema },
+    ]),
+  ],
   controllers: [LeaderboardController],
   providers: [LeaderboardService],
 })
