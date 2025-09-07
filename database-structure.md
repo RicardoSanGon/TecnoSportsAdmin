@@ -80,7 +80,7 @@ Almacena la información de las quinelas creadas por los usuarios.
 | max_participants   | INTEGER       | Número máximo de participantes      | DEFAULT 20                   |
 | is_close           | BOOLEAN       | Si la quinela cerrada               | DEFAULT FALSE                |
 | is_active          | BOOLEAN       | Si la quinela está activa           | DEFAULT TRUE                 |
-| start_date         | TIMESTAMP     | Fecha que empezo la quiniela        | DEFAULT CURRENT_TIMESTAMP    |
+| start_date         | TIMESTAMP     | Fecha que se creo la quiniela       | DEFAULT CURRENT_TIMESTAMP    |
 | end_date           | TIMESTAMP     | Fecha que terminara la quiniela     | NULL                         |
 | created_at         | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
 | updated_at         | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |

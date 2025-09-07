@@ -1,0 +1,34 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ConfederationsService } from './confederations.service';
+import { CreateConfederationDto } from './dto/create-confederation.dto';
+import { UpdateConfederationDto } from './dto/update-confederation.dto';
+
+@Controller('confederations')
+export class ConfederationsController {
+  constructor(private readonly confederationsService: ConfederationsService) {}
+
+  @Post()
+  create(@Body() createConfederationDto: CreateConfederationDto) {
+    return this.confederationsService.create(createConfederationDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.confederationsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.confederationsService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateConfederationDto: UpdateConfederationDto) {
+    return this.confederationsService.update(+id, updateConfederationDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.confederationsService.remove(+id);
+  }
+}
