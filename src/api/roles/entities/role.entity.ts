@@ -5,7 +5,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 @Entity('roles')
 export class Role extends EntityBase {
   @Column()
-  nombre: string;
+  name: string;
 
   @OneToMany(() => User, (user) => user.role)
   users: User[];

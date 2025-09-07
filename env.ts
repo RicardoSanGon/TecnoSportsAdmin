@@ -1,5 +1,7 @@
-export const ENV = {
+export const env = {
   port: parseInt(process.env.PORT || '3000', 10),
+
+  api_prefix: 'api/',
 
   // supabase: {
   //   url: process.env.SUPABASE_URL || '',

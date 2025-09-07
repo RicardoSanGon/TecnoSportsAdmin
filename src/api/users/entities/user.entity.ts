@@ -24,7 +24,11 @@ export class User extends EntityBase {
   @Exclude()
   password: string;
 
+  @Column({ default: 3 })
+  roleId;
+
   @ManyToOne(() => Role, (role) => role.users)
+  @JoinTable({ name: 'roleId' })
   role: Role;
 
   @ManyToOne(() => Pool, (pool) => pool.creator)
