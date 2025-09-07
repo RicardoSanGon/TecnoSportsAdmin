@@ -24,6 +24,17 @@ Almacena la información de los equipos de fútbol participantes.
 | id             | INTEGER       | Identificador único del equipo      | PRIMARY KEY, AUTO_INCREMENT  |
 | name           | VARCHAR(255)  | Nombre del equipo                   | UNIQUE, NOT NULL             |
 | logo_url       | VARCHAR(500)  | URL del logo del equipo             | NULL                         |
+| is_active      | BOOLEAN       | Si el equipo está activo            | DEFAULT TRUE                 |
+| created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
+| updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
+### 2.1 Tabla: `confederations`
+Almacena la información de los equipos de fútbol participantes.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único de la confederacion     | PRIMARY KEY, AUTO_INCREMENT  |
+| name           | VARCHAR(255)  | Nombre de la confederacion          | UNIQUE, NOT NULL             |
 | created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
 | updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
 
@@ -37,8 +48,9 @@ Almacena la información de los partidos de fútbol programados.
 | away_team_id   | INTEGER       | ID del equipo visitante             | FOREIGN KEY -> teams(id), NOT NULL |
 | match_date     | TIMESTAMP     | Fecha y hora del partido            | NOT NULL                     |
 | week_number    | INTEGER       | Número de semana del torneo         | NOT NULL                     |
-| result         | VARCHAR(10)   | Resultado final (e.g., "2-1")       | NULL                         |
-| status         | VARCHAR(20)   | Estado del partido (pending, finished) | DEFAULT 'pending'           |
+| score_home     | numeric       | Marcador local (e.g., 2)            | NULL                         |
+| score_away     | numeric       | Marcador visitante (e.g., 1)        | NULL                         |
+| status         | VARCHAR(20)   | Estado del partido (pending, en juego, finished) | DEFAULT 'pending'           |
 | created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
 | updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
 
@@ -53,11 +65,17 @@ Almacena la información de las quinelas creadas por los usuarios.
 | creator_id         | INTEGER       | ID del usuario creador              | FOREIGN KEY -> users(id), NOT NULL |
 | invitation_code    | VARCHAR(10)   | Código de invitación único          | UNIQUE, NOT NULL             |
 | max_participants   | INTEGER       | Número máximo de participantes      | DEFAULT 20                   |
-| start_week         | INTEGER       | Semana de inicio                    | NOT NULL                     |
-| end_week           | INTEGER       | Semana de fin                       | NULL                         |
+| is_close           | BOOLEAN       | Si la quinela cerrada               | DEFAULT FALSE                |
 | is_active          | BOOLEAN       | Si la quinela está activa           | DEFAULT TRUE                 |
+| start_date         | TIMESTAMP     | Fecha que empezo la quiniela        | DEFAULT CURRENT_TIMESTAMP    |
+| end_date           | TIMESTAMP     | Fecha que terminara la quiniela     | NULL                         |
 | created_at         | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
 | updated_at         | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+<!-- Recordatorio: Calcular la fecha final para la quiniela -->
+<!-- Se agrego si la quiniela esta cerrada, por defecto en false, el creador
+     de la quiniela podra cerrarla si se realizaron las prediciones o un dia antes de que
+     empiezen los encuentros.
+ -->
 
 ### 5. Tabla: `pool_participants`
 Relaciona usuarios con quinelas a las que se han unido.
@@ -94,6 +112,7 @@ Almacena la clasificación de usuarios por quinela.
 | total_points   | INTEGER       | Puntos totales acumulados           | DEFAULT 0                    |
 | position       | INTEGER       | Posición en la clasificación        | NULL                         |
 | updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+<!-- Recordatorio: Hacer tabla en mongodb -->
 
 ## Relaciones
 
