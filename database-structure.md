@@ -4,6 +4,16 @@ Esta es la  estructura de la base de datos para la API de TecnoSportsAdmin, que 
 
 ## Tablas Principales
 
+### 0. Tabla: `roles`
+Almacena los roles necesarios en la aplicacion.
+
+| Campo          | Tipo          | Descripción                          | Restricciones                  |
+|----------------|---------------|--------------------------------------|-------------------------------|
+| id             | INTEGER       | Identificador único del usuario     | PRIMARY KEY, AUTO_INCREMENT  |
+| name           | VARCHAR(255)  | Nombre del rol                      | NOT NULL                     |
+| created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
+| updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
+
 ### 1. Tabla: `users`
 Almacena la información de los usuarios registrados en la plataforma.
 
@@ -14,6 +24,7 @@ Almacena la información de los usuarios registrados en la plataforma.
 | email          | VARCHAR(255)  | Correo electrónico                  | UNIQUE, NOT NULL             |
 | password       | VARCHAR(255)  | Contraseña hasheada                 | NOT NULL                     |
 | is_active      | BOOLEAN       | Si el usuario esta activo           | DEFAULT TRUE                 |
+| rol_id          | INTEGER       | Id del rol                          | FOREIGN KEY -> roles(id), NOT NULL |
 | created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
 | updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
 
@@ -31,7 +42,7 @@ Almacena la información de los equipos de fútbol participantes.
 | updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
 
 ### 2.1 Tabla: `confederations`
-Almacena la información de los equipos de fútbol participantes.
+Almacena la información de las confederaciones.
 
 | Campo          | Tipo          | Descripción                          | Restricciones                  |
 |----------------|---------------|--------------------------------------|-------------------------------|
