@@ -13,6 +13,7 @@ Almacena la información de los usuarios registrados en la plataforma.
 | name           | VARCHAR(255)  | Nombre completo del usuario         | NOT NULL                     |
 | email          | VARCHAR(255)  | Correo electrónico                  | UNIQUE, NOT NULL             |
 | password       | VARCHAR(255)  | Contraseña hasheada                 | NOT NULL                     |
+| is_active      | BOOLEAN       | Si el usuario esta activo           | DEFAULT TRUE                 |
 | created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
 | updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
 
@@ -25,6 +26,7 @@ Almacena la información de los equipos de fútbol participantes.
 | name           | VARCHAR(255)  | Nombre del equipo                   | UNIQUE, NOT NULL             |
 | logo_url       | VARCHAR(500)  | URL del logo del equipo             | NULL                         |
 | is_active      | BOOLEAN       | Si el equipo está activo            | DEFAULT TRUE                 |
+| confederation_id | INTEGER     | Id de la confederacion perteneciente | FOREIGN KEY -> confederations(id), NOT NULL |
 | created_at     | TIMESTAMP     | Fecha de creación                   | DEFAULT CURRENT_TIMESTAMP    |
 | updated_at     | TIMESTAMP     | Fecha de última actualización       | DEFAULT CURRENT_TIMESTAMP    |
 
