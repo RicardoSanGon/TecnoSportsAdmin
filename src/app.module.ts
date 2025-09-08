@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,11 +12,18 @@ import { MatchesModule } from './api/matches/matches.module';
 import { PoolsModule } from './api/pools/pools.module';
 import { PredictionsModule } from './api/predictions/predictions.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { SupabaseModule } from './supabase/supabase.module';
+import { AuthService } from './auth/auth.service';
+import { AuthController } from './auth/auth.controller';
+import supabaseConfig from './config/supabase.config';
+import { validationSchema } from './config/env.validation';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      load: [supabaseConfig],
       isGlobal: true,
+      validationSchema,
     }),
     MongooseModule.forRoot(process.env.MONGO_URL ? process.env.MONGO_URL : ''),
     TypeOrmModule.forRoot({
@@ -36,8 +44,9 @@ import { MongooseModule } from '@nestjs/mongoose';
     MatchesModule,
     PoolsModule,
     PredictionsModule,
+    SupabaseModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, AuthController],
+  providers: [AppService, AuthService],
 })
 export class AppModule {}
