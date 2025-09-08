@@ -14,15 +14,14 @@ import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User extends EntityBase {
+  @Column({ unique: true, nullable: true })
+  authUserId: string;
+
   @Column()
   email: string;
 
   @Column()
   name: string;
-
-  @Column()
-  @Exclude()
-  password: string;
 
   @Column({ default: 3 })
   roleId;

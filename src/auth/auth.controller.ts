@@ -1,17 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 // auth/auth.controller.ts
 import { Controller, Post, Body, UseGuards, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SupabaseGuard } from './supabase.guard';
+import { CreateUserDto } from 'src/api/users/dto/create-user.dto';
+import { found } from 'src/utils/Responses';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  async signUp(@Body() body: { email: string; password: string }) {
-    return this.authService.signUp(body.email, body.password);
+  async signUp(@Body() body: CreateUserDto) {
+    return this.authService.signUp(body);
   }
 
   @Post('signin')
@@ -22,7 +25,10 @@ export class AuthController {
   @UseGuards(SupabaseGuard)
   @Get('profile')
   async getProfile(@Req() req) {
-    return await req.user;
+    return found(
+      'Profile',
+      await this.authService.getUserProfile(req.user.authUserId),
+    );
   }
 
   @UseGuards(SupabaseGuard)

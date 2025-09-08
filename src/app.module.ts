@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,10 +12,9 @@ import { PoolsModule } from './api/pools/pools.module';
 import { PredictionsModule } from './api/predictions/predictions.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SupabaseModule } from './supabase/supabase.module';
-import { AuthService } from './auth/auth.service';
-import { AuthController } from './auth/auth.controller';
 import supabaseConfig from './config/supabase.config';
 import { validationSchema } from './config/env.validation';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,7 +28,7 @@ import { validationSchema } from './config/env.validation';
       type: 'postgres',
       url: process.env.DATABASE_URL, // 👈 tomamos todo del .env
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       extra: {
         ssl: {
           rejectUnauthorized: false, // ⚡ ignora el certificado autofirmado
@@ -45,8 +43,9 @@ import { validationSchema } from './config/env.validation';
     PoolsModule,
     PredictionsModule,
     SupabaseModule,
+    AuthModule,
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
