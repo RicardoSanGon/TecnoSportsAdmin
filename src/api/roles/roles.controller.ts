@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { env } from '../../../env';
+import { env } from 'env';
 
 @Controller(`${env.api_prefix}roles`)
 export class RolesController {

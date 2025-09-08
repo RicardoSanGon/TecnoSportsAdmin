@@ -1,4 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+export function ok(data: any) {
+  return {
+    message: 'OK!',
+    data: data,
+  };
+}
+
 export function saved(table: string, data: any) {
   return {
     message: `${table} saved!`,
