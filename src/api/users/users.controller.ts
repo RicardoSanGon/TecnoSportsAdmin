@@ -1,9 +1,11 @@
-import { Controller, Get, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { env } from 'env';
+import { SupabaseAuthGuard } from 'src/supabase-auth/supabase-auth.guard';
 
 @Controller(`${env.api_prefix}users`)
+@UseGuards(SupabaseAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @Render('pages/home/index')
+  @Render('pages/home/index.hbs')
   root() {
     return;
   }
