@@ -1,0 +1,77 @@
+<!-- Gestión de Partidos - Diseño Moderno con Colores Verdes -->
+<div class="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-calendar-alt mr-3 text-primary-600"></i>
+            Gestión de <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">Partidos</span>
+          </h1>
+          <p class="text-lg text-gray-600">Administrar partidos y actualizar resultados</p>
+        </div>
+      </div>
+    </div>
+  <!-- Tabla de partidos -->
+  <div class="bg-white rounded-lg shadow-md">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-800">Lista de Partidos</h2>
+        <button id="addMatchBtn" class="inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-700 transition-colors">
+          <span class="material-icons mr-2">add</span>
+          Nuevo Partido
+        </button>
+      </div>
+    </div>
+
+    <div class="p-6 overflow-x-auto">
+      <table id="matchesTable" class="w-full text-sm text-left">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th class="px-6 py-3">ID</th>
+            <th class="px-6 py-3">Local</th>
+            <th class="px-6 py-3">Visitante</th>
+            <th class="px-6 py-3">Marcador</th>
+            <th class="px-6 py-3">Semana</th>
+            <th class="px-6 py-3">Fecha</th>
+            <th class="px-6 py-3">Estado</th>
+            <th class="px-6 py-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="matchesTableBody">
+          {{#each matches}}
+            <tr>
+              <td class="px-6 py-4">{{this.id}}</td>
+              <td class="px-6 py-4 font-medium text-gray-900">{{this.homeTeamId}}</td>
+              <td class="px-6 py-4 font-medium text-gray-900">{{this.awayTeamId}}</td>
+              <td class="px-6 py-4 font-bold text-center">{{this.scoreHome}} - {{this.scoreAway}}</td>
+              <td class="px-6 py-4">{{this.weekNumber}}</td>
+              <td class="px-6 py-4">{{this.matchDate}}</td>
+              <td class="px-6 py-4">
+                <span class="px-2 py-1 text-xs rounded-full {{#if (eq this.status 'finished')}}bg-green-100 text-green-800{{else if (eq this.status 'in_progress')}}bg-yellow-100 text-yellow-800{{else}}bg-gray-100 text-gray-800{{/if}}">
+                  {{this.status}}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex gap-2">
+                  <button onclick="editMatch({{this.id}})" class="text-primary-600 hover:text-primary-800">
+                    <span class="material-icons">edit</span>
+                  </button>
+                  <button onclick="updateResult({{this.id}})" class="text-green-600 hover:text-green-800">
+                    <span class="material-icons">sports_soccer</span>
+                  </button>
+                  <button onclick="deleteMatch({{this.id}})" class="text-red-600 hover:text-red-800">
+                    <span class="material-icons">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

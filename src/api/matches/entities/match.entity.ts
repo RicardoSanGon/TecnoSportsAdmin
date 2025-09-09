@@ -5,17 +5,26 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('matches')
 export class Match extends EntityBase {
-  @Column()
+  @Column({ nullable: false })
   weekNumber: number;
-  @Column()
+
+  @Column({ default: 0 })
   scoreHome: number;
-  @Column()
+
+  @Column({ default: 0 })
   scoreAway: number;
-  @Column()
+
+  @Column({ default: 'pending' })
   status: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: false })
   matchDate: Date;
+
+  @Column({ nullable: false })
+  homeTeamId: number;
+
+  @Column({ nullable: false })
+  awayTeamId: number;
 
   @ManyToOne(() => Team, { eager: false })
   @JoinColumn({ name: 'homeTeamId' })

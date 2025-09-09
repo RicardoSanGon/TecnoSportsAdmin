@@ -1,0 +1,59 @@
+<!-- Gestión de Predicciones - Diseño Moderno con Colores Verdes -->
+<div class="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-brain mr-3 text-primary-600"></i>
+            Gestión de <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">Predicciones</span>
+          </h1>
+          <p class="text-lg text-gray-600">Ver y gestionar todas las predicciones del sistema</p>
+        </div>
+      </div>
+    </div>
+  <!-- Tabla de predicciones -->
+  <div class="bg-white rounded-lg shadow-md">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-800">Lista de Predicciones</h2>
+      </div>
+    </div>
+
+    <div class="p-6 overflow-x-auto">
+      <table id="predictionsTable" class="w-full text-sm text-left">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th class="px-6 py-3">ID</th>
+            <th class="px-6 py-3">Usuario</th>
+            <th class="px-6 py-3">Partido</th>
+            <th class="px-6 py-3">Predicción</th>
+            <th class="px-6 py-3">Puntos</th>
+            <th class="px-6 py-3">Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="predictionsTableBody">
+          {{#each predictions}}
+            <tr>
+              <td class="px-6 py-4">{{this.id}}</td>
+              <td class="px-6 py-4 font-medium text-gray-900">{{this.userId}}</td>
+              <td class="px-6 py-4">{{this.matchId}}</td>
+              <td class="px-6 py-4">
+                <span class="px-2 py-1 text-xs rounded-full bg-primary-100 text-primary-800">
+                  {{this.prediction}}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="{{#if (eq this.points 3)}}text-green-600 font-bold{{else if (eq this.points 1)}}text-yellow-600{{else}}text-red-600{{/if}}">{{this.points}}</span>
+              </td>
+              <td class="px-6 py-4">{{this.created_at}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

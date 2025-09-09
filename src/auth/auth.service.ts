@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/api/users/dto/create-user.dto';
 import { User } from 'src/api/users/entities/user.entity';
 import { SupabaseService } from 'src/supabase/supabase.service';
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     private supabaseService: SupabaseService,
     @InjectRepository(User) private userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
 
   async signUp(createUser: CreateUserDto) {
@@ -33,6 +35,7 @@ export class AuthService {
           authUserId: authData.user.id, // Conectar con Supabase Auth
           email,
           name,
+          roleId: 3, // Asignar rol por defecto explícitamente
         });
 
         // TypeORM usará tu conexión directa a PostgreSQL, no Supabase
@@ -67,6 +70,71 @@ export class AuthService {
     }
 
     return data;
+  }
+
+  async login(email: string, password: string) {
+    // Primero autenticar con Supabase
+    const { data: authData, error: authError } = await this.supabaseService
+      .getClient()
+      .auth.signInWithPassword({
+        email,
+        password,
+      });
+
+    if (authError) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    if (!authData.user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+
+    // Obtener el perfil del usuario con el rol
+    const userProfile = await this.getUserProfile(authData.user.id);
+
+    // Verificar que el usuario tenga rol de Administrador (ID 2)
+    if (userProfile.roleId !== 2) {
+      // Usuario válido pero sin permisos de admin
+      const payload = {
+        sub: authData.user.id,
+        email: userProfile.email,
+        name: userProfile.name,
+        roleId: userProfile.roleId,
+      };
+
+      const token = this.jwtService.sign(payload);
+
+      return {
+        access_token: token,
+        user: {
+          id: userProfile.id,
+          email: userProfile.email,
+          name: userProfile.name,
+          roleId: userProfile.roleId,
+        },
+        requires_admin: true, // Indica que necesita permisos de admin
+      };
+    }
+
+    // Generar JWT token
+    const payload = {
+      sub: authData.user.id,
+      email: userProfile.email,
+      name: userProfile.name,
+      roleId: userProfile.roleId,
+    };
+
+    const token = this.jwtService.sign(payload);
+
+    return {
+      access_token: token,
+      user: {
+        id: userProfile.id,
+        email: userProfile.email,
+        name: userProfile.name,
+        roleId: userProfile.roleId,
+      },
+    };
   }
 
   async signOut() {

@@ -20,6 +20,16 @@ async function bootstrap() {
       layoutsDir: join(__dirname, '..', '..', 'views', 'layouts'),
       partialsDir: join(__dirname, '..', '..', 'views', 'partials'),
       defaultLayout: 'main',
+      helpers: {
+        eq: (a: any, b: any) => a === b,
+        ne: (a: any, b: any) => a !== b,
+        lt: (a: any, b: any) => a < b,
+        gt: (a: any, b: any) => a > b,
+        lte: (a: any, b: any) => a <= b,
+        gte: (a: any, b: any) => a >= b,
+        and: (a: any, b: any) => a && b,
+        or: (a: any, b: any) => a || b,
+      },
     }),
   );
 

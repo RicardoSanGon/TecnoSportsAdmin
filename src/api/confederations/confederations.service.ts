@@ -1,26 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateConfederationDto } from './dto/create-confederation.dto';
 import { UpdateConfederationDto } from './dto/update-confederation.dto';
+import { Confederation } from './entities/confederation.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { found, notFound, saved, updated } from 'src/utils/Responses';
+
+const table = 'Confederation';
 
 @Injectable()
 export class ConfederationsService {
-  create(createConfederationDto: CreateConfederationDto) {
-    return 'This action adds a new confederation';
+  constructor(
+    @InjectRepository(Confederation) private readonly repo: Repository<Confederation>,
+  ) {}
+
+  async create(createConfederationDto: CreateConfederationDto) {
+    return saved(table, await this.repo.save(createConfederationDto));
   }
 
-  findAll() {
-    return `This action returns all confederations`;
+  async findAll() {
+    return found(`${table}s`, await this.repo.find());
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} confederation`;
+  async findOne(id: number) {
+    const confederation = await this.repo.findOne({ where: { id } });
+    if (!confederation) {
+      throw new NotFoundException(notFound(table, id));
+    }
+    return found(table, confederation);
   }
 
-  update(id: number, updateConfederationDto: UpdateConfederationDto) {
-    return `This action updates a #${id} confederation`;
+  async update(id: number, updateConfederationDto: UpdateConfederationDto) {
+    const confederation = await this.repo.findOne({ where: { id } });
+
+    if (!confederation) {
+      throw new NotFoundException(notFound(table, id));
+    }
+
+    Object.assign(confederation, updateConfederationDto);
+
+    return updated(table, await this.repo.save(confederation));
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} confederation`;
+  async remove(id: number) {
+    const confederation = await this.repo.findOne({ where: { id } });
+
+    if (!confederation) {
+      throw new NotFoundException(notFound(table, id));
+    }
+
+    await this.repo.remove(confederation);
+    return { message: `${table} with id ${id} has been removed` };
   }
 }

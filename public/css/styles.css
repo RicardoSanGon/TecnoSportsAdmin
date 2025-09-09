@@ -1,8 +1,41 @@
+/* Tailwind CSS - Directivas principales */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* CSS personalizado para TecnoSports Admin */
 #nav-link, #nav-title {
-  color: white ;
+  color: white;
 }
 
+/* Estilos adicionales personalizados */
+.custom-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.custom-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.custom-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Asegurar que las clases de Tailwind funcionen */
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+
+  .stat-card {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl p-6 shadow-lg;
+  }
+
+  .nav-link {
+    @apply px-3 py-2 text-sm font-medium rounded-md transition-all duration-200;
+  }
+
+  .nav-link.active {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white;
+  }
+}

@@ -1,30 +1,179 @@
+<!DOCTYPE html>
 <html lang='es'>
   <head>
     <meta charset='UTF-8' />
-    <title>{{title}}</title>
-
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <link href='/css/output.css' rel='stylesheet' />
-    <link href='/css/styles.css' rel='stylesheet' />
+    <title>{{title}} - TecnoSports Admin</title>
 
-    <link
-      href='https://fonts.googleapis.com/icon?family=Material+Icons'
-      rel='stylesheet'
-    />
-    <link
-      rel='stylesheet'
-      href='https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css'
-    />
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+
+    <!-- CSS -->
+    <link href='/css/output.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
+
   </head>
-  <body class='bg-gray-100 overflow-hidden w-full h-full'>
+  <body class='min-h-screen'>
     {{> header}}
-    <main>
+    <main class='main-content'>
       {{{body}}}
     </main>
 
+    <!-- Scripts -->
     <script src='https://code.jquery.com/jquery-3.7.0.min.js'></script>
-    <script
-      src='https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js'
-    ></script>
+    <script src='https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js'></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+      // Navigation function with token - Make it global immediately
+      window.navigateToPage = function(path) {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          window.location.href = `${path}?token=${encodeURIComponent(token)}`;
+        } else {
+          window.location.href = path;
+        }
+      };
+
+      window.logout = function() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        window.location.href = '/admin/login';
+      };
+
+      $(document).ready(function() {
+        // Sidebar Toggle
+        $('#sidebarToggle').on('click', function() {
+          $('#sidebar').removeClass('-translate-x-full');
+          $('#sidebarOverlay').removeClass('hidden');
+        });
+
+        $('#closeSidebar, #sidebarOverlay').on('click', function() {
+          $('#sidebar').addClass('-translate-x-full');
+          $('#sidebarOverlay').addClass('hidden');
+        });
+
+        // User Menu Toggle
+        $('#userMenuBtn').on('click', function() {
+          $('#userMenu').toggleClass('hidden');
+        });
+
+        // Close user menu when clicking outside
+        $(document).on('click', function(e) {
+          if (!$(e.target).closest('#userMenuBtn').length && !$(e.target).closest('#userMenu').length) {
+            $('#userMenu').addClass('hidden');
+          }
+        });
+        
+        // Page specific scripts
+        const page = '{{currentPage}}';
+
+        switch (page) {
+          case 'users':
+            let usersTable = $('#usersTable').DataTable({
+              language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+              }
+            });
+
+            $('#searchInput').on('keyup', function(){
+              usersTable.search($(this).val()).draw();
+            });
+
+            $('#roleFilter').on('change', function(){
+              usersTable.column(3).search($(this).val()).draw();
+            });
+
+            $('#statusFilter').on('change', function(){
+              usersTable.column(4).search($(this).val()).draw();
+            });
+            break;
+
+          case 'teams':
+            let teamsTable = $('#teamsTable').DataTable({
+              language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+              }
+            });
+
+            $('#searchInput').on('keyup', function(){
+              teamsTable.search($(this).val()).draw();
+            });
+
+            $('#confederationFilter').on('change', function(){
+              teamsTable.column(2).search($(this).val()).draw();
+            });
+
+            $('#statusFilter').on('change', function(){
+              teamsTable.column(4).search($(this).val()).draw();
+            });
+            break;
+
+          case 'pools':
+            let poolsTable = $('#poolsTable').DataTable({
+              language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+              }
+            });
+
+            $('#searchInput').on('keyup', function(){
+              poolsTable.search($(this).val()).draw();
+            });
+
+            $('#statusFilter').on('change', function(){
+              poolsTable.column(4).search($(this).val()).draw();
+            });
+
+            $('#closedFilter').on('change', function(){
+              poolsTable.column(5).search($(this).val()).draw();
+            });
+            break;
+
+          case 'matches':
+            let matchesTable = $('#matchesTable').DataTable({
+              language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+              }
+            });
+
+            $('#searchInput').on('keyup', function(){
+              matchesTable.search($(this).val()).draw();
+            });
+
+            $('#statusFilter').on('change', function(){
+              matchesTable.column(6).search($(this).val()).draw();
+            });
+
+            $('#weekFilter').on('keyup', function(){
+              matchesTable.column(4).search($(this).val()).draw();
+            });
+            break;
+
+          case 'predictions':
+            let predictionsTable = $('#predictionsTable').DataTable({
+              language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+              }
+            });
+
+            $('#searchInput').on('keyup', function(){
+              predictionsTable.search($(this).val()).draw();
+            });
+
+            $('#predictionFilter').on('change', function(){
+              predictionsTable.column(3).search($(this).val()).draw();
+            });
+
+            $('#pointsFilter').on('change', function(){
+              predictionsTable.column(4).search($(this).val()).draw();
+            });
+            break;
+        }
+      });
+    </script>
   </body>
 </html>

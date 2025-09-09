@@ -1,0 +1,236 @@
+/* CSS personalizado para TecnoSports Admin con paleta de colores verdes */
+#nav-link, #nav-title {
+  color: white;
+}
+
+/* Variables CSS con colores verdes */
+:root {
+  --primary-gradient: linear-gradient(135deg, #52B788 0%, #40916C 100%);
+  --sidebar-bg: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  --lightest-green: #D8F3DC;
+  --pastel-green: #B7E4C7;
+  --medium-green: #95D5B2;
+  --darker-pastel-green: #74C69D;
+  --bright-green: #52B788;
+  --deep-green: #40916C;
+  --forest-green: #2D6A4F;
+  --dark-teal: #1B4332;
+  --darkest-green: #081C15;
+}
+
+/* Estilos adicionales personalizados */
+.custom-gradient {
+  background: var(--primary-gradient);
+}
+
+.custom-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.custom-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Asegurar que las clases de Tailwind funcionen con colores verdes */
+@layer components {
+  .btn-primary {
+    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+
+  .stat-card {
+    @apply bg-gradient-to-r from-primary-400 to-primary-600 text-white rounded-xl p-6 shadow-lg;
+  }
+
+  .nav-link {
+    @apply px-3 py-2 text-sm font-medium rounded-md transition-all duration-200;
+  }
+
+  .nav-link.active {
+    @apply bg-gradient-to-r from-primary-500 to-primary-700 text-white;
+  }
+
+  .nav-link:hover {
+    @apply bg-primary-100 text-primary-800;
+  }
+
+  /* Sidebar con colores verdes */
+  .sidebar {
+    background: var(--sidebar-bg);
+  }
+
+  /* Cards con gradientes verdes */
+  .card-primary {
+    @apply bg-gradient-to-r from-primary-50 to-primary-100 border border-primary-200;
+  }
+
+  .card-secondary {
+    @apply bg-gradient-to-r from-primary-100 to-primary-200 border border-primary-300;
+  }
+
+  /* Botones con colores verdes */
+  .btn-success {
+    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-primary-500 text-primary-600 hover:bg-primary-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  /* Estados de carga y vacío con colores verdes */
+  .loading-state {
+    @apply flex flex-col items-center justify-center p-8 text-center;
+  }
+
+  .empty-state {
+    @apply flex flex-col items-center justify-center p-8 text-center;
+  }
+
+  .empty-state i {
+    @apply text-6xl text-primary-300 mb-4;
+  }
+
+  .empty-state h3 {
+    @apply text-xl font-semibold text-primary-700 mb-2;
+  }
+
+  .empty-state p {
+    @apply text-primary-600;
+  }
+
+  /* Notificaciones con colores verdes */
+  .notification.success {
+    @apply bg-primary-500 text-white;
+  }
+
+  .notification.error {
+    @apply bg-red-500 text-white;
+  }
+
+  .notification.info {
+    @apply bg-blue-500 text-white;
+  }
+
+  /* Formularios con colores verdes */
+  .form-input:focus {
+    @apply border-primary-500 ring-2 ring-primary-200;
+  }
+
+  .form-select:focus {
+    @apply border-primary-500 ring-2 ring-primary-200;
+  }
+
+  /* DataTables con colores verdes */
+  .dataTables_wrapper .dataTables_length select:focus,
+  .dataTables_wrapper .dataTables_filter input:focus {
+    @apply border-primary-500 ring-2 ring-primary-200;
+  }
+
+  .dataTables_wrapper .paginate_button:hover {
+    @apply bg-primary-500 text-white;
+  }
+
+  .dataTables_wrapper .paginate_button.current {
+    @apply bg-primary-600 text-white;
+  }
+
+  /* Gradientes verdes personalizados */
+  .gradient-green-light {
+    background: linear-gradient(135deg, var(--lightest-green) 0%, var(--pastel-green) 100%);
+  }
+
+  .gradient-green-medium {
+    background: linear-gradient(135deg, var(--medium-green) 0%, var(--darker-pastel-green) 100%);
+  }
+
+  .gradient-green-dark {
+    background: linear-gradient(135deg, var(--bright-green) 0%, var(--deep-green) 100%);
+  }
+
+  .gradient-green-deep {
+    background: linear-gradient(135deg, var(--forest-green) 0%, var(--dark-teal) 100%);
+  }
+}
+
+/* Estilos específicos para elementos con colores verdes */
+.stat-card {
+  background: var(--primary-gradient);
+  border-radius: 16px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(82, 183, 136, 0.4);
+}
+
+.nav-link.active {
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: 0 4px 15px rgba(82, 183, 136, 0.3);
+}
+
+.btn-primary {
+  background: var(--primary-gradient);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(82, 183, 136, 0.3);
+}
+
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none;
+  }
+
+  .mobile-full {
+    width: 100%;
+  }
+}
+
+/* Custom scrollbar con colores verdes */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-gradient);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2D6A4F 0%, #1B4332 100%);
+}

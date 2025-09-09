@@ -1,0 +1,175 @@
+<!-- Dashboard Moderno con Colores Verdes -->
+<div class="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">
+            <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+              Dashboard Administrativo
+            </span>
+          </h1>
+        </div>  
+      </div>
+    </div>
+
+    <!-- Estadísticas principales -->
+    <div class="container mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-r from-primary-400 to-primary-600 text-white p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-primary-50 text-sm font-medium mb-1">Total Usuarios</p>
+              <p class="text-3xl font-bold text-white">{{totalUsers}}</p>
+            </div>
+            <div class="p-4 bg-white bg-opacity-20 rounded-full">
+              <i class="fas fa-users text-2xl text-white"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-primary-300 to-primary-500 text-white p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-primary-50 text-sm font-medium mb-1">Total Equipos</p>
+              <p class="text-3xl font-bold text-white">{{totalTeams}}</p>
+            </div>
+            <div class="p-4 bg-white bg-opacity-20 rounded-full">
+              <i class="fas fa-shield-alt text-2xl text-white"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-primary-500 to-primary-700 text-white p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-primary-50 text-sm font-medium mb-1">Quinelas Activas</p>
+              <p class="text-3xl font-bold text-white">{{totalPools}}</p>
+            </div>
+            <div class="p-4 bg-white bg-opacity-20 rounded-full">
+              <i class="fas fa-trophy text-2xl text-white"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-primary-50 text-sm font-medium mb-1">Partidos Hoy</p>
+              <p class="text-3xl font-bold text-white">{{todayMatches}}</p>
+              <p class="text-primary-100 text-xs mt-1">
+                <i class="fas fa-calendar-day mr-1"></i>Próximos eventos
+              </p>
+            </div>
+            <div class="p-4 bg-white bg-opacity-20 rounded-full">
+              <i class="fas fa-calendar-alt text-2xl text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accesos rápidos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl shadow-lg p-6 card-hover group">
+        <div class="flex items-center mb-4">
+          <div class="p-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <i class="fas fa-users text-white text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Gestión de Usuarios</h3>
+            <p class="text-sm text-gray-600">Administrar usuarios, roles y permisos</p>
+          </div>
+        </div>
+        <button onclick="navigateToPage('/admin/users')" class="w-full bg-gradient-to-r from-primary-500 to-primary-700 text-white py-3 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center">
+          <i class="fas fa-arrow-right mr-2"></i>Gestionar Usuarios
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 card-hover group">
+        <div class="flex items-center mb-4">
+          <div class="p-3 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <i class="fas fa-shield-alt text-white text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Equipos y Confederaciones</h3>
+            <p class="text-sm text-gray-600">Administrar equipos y confederaciones</p>
+          </div>
+        </div>
+        <button onclick="navigateToPage('/admin/teams')" class="w-full bg-gradient-to-r from-primary-500 to-primary-700 text-white py-3 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center">
+          <i class="fas fa-arrow-right mr-2"></i>Gestionar Equipos
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 card-hover group">
+        <div class="flex items-center mb-4">
+          <div class="p-3 bg-gradient-to-r from-primary-500 to-primary-700 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <i class="fas fa-trophy text-white text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Quinelas y Rankings</h3>
+            <p class="text-sm text-gray-600">Administrar quinelas y ver clasificaciones</p>
+          </div>
+        </div>
+        <button onclick="navigateToPage('/admin/pools')" class="w-full bg-gradient-to-r from-primary-500 to-primary-700 text-white py-3 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center">
+          <i class="fas fa-arrow-right mr-2"></i>Gestionar Quinelas
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 card-hover group">
+        <div class="flex items-center mb-4">
+          <div class="p-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <i class="fas fa-calendar-alt text-white text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Partidos y Resultados</h3>
+            <p class="text-sm text-gray-600">Administrar partidos y actualizar resultados</p>
+          </div>
+        </div>
+        <button onclick="navigateToPage('/admin/matches')" class="w-full bg-gradient-to-r from-primary-500 to-primary-700 text-white py-3 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center">
+          <i class="fas fa-arrow-right mr-2"></i>Gestionar Partidos
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 card-hover group">
+        <div class="flex items-center mb-4">
+          <div class="p-3 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <i class="fas fa-brain text-white text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Predicciones</h3>
+            <p class="text-sm text-gray-600">Ver y gestionar todas las predicciones</p>
+          </div>
+        </div>
+        <button onclick="navigateToPage('/admin/predictions')" class="w-full bg-gradient-to-r from-primary-500 to-primary-700 text-white py-3 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center">
+          <i class="fas fa-arrow-right mr-2"></i>Ver Predicciones
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 card-hover group">
+        <div class="flex items-center mb-4">
+          <div class="p-3 bg-gradient-to-r from-red-500 to-red-600 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200">
+            <i class="fas fa-chart-bar text-white text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Reportes y Analytics</h3>
+            <p class="text-sm text-gray-600">Ver estadísticas y reportes detallados</p>
+          </div>
+        </div>
+        <button onclick="navigateToPage('/admin/reports')" class="w-full bg-gradient-to-r from-primary-500 to-primary-700 text-white py-3 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center">
+          <i class="fas fa-arrow-right mr-2"></i>Ver Reportes
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-12 text-center">
+      <p class="text-gray-500 text-sm">
+        <i class="fas fa-code mr-1"></i>
+        Desarrollado con <span class="text-red-500">♥</span> para TecnoSports v1.0.0
+      </p>
+    </div>
+  </div>
+</div>

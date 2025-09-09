@@ -10,11 +10,13 @@ import { TeamsModule } from './api/teams/teams.module';
 import { MatchesModule } from './api/matches/matches.module';
 import { PoolsModule } from './api/pools/pools.module';
 import { PredictionsModule } from './api/predictions/predictions.module';
+import { LeaderboardModule } from './api/leaderboard/leaderboard.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SupabaseModule } from './supabase/supabase.module';
 import supabaseConfig from './config/supabase.config';
 import { validationSchema } from './config/env.validation';
 import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin.module';
 
 @Module({
   imports: [
@@ -26,12 +28,14 @@ import { AuthModule } from './auth/auth.module';
     MongooseModule.forRoot(process.env.MONGO_URL ? process.env.MONGO_URL : ''),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL, // 👈 tomamos todo del .env
+      url: process.env.DATABASE_URL,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: false, // 🔒 Desactivado - No crear tablas automáticamente
+      dropSchema: false, // 🔒 Desactivado - No eliminar tablas
+      logging: false, // 🔕 Sin logs detallados
       extra: {
         ssl: {
-          rejectUnauthorized: false, // ⚡ ignora el certificado autofirmado
+          rejectUnauthorized: false,
         },
       },
     }),
@@ -42,8 +46,10 @@ import { AuthModule } from './auth/auth.module';
     MatchesModule,
     PoolsModule,
     PredictionsModule,
+    LeaderboardModule,
     SupabaseModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

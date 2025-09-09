@@ -5,7 +5,7 @@ import { EntityBase } from 'src/base.entity';
 import {
   Column,
   Entity,
-  JoinTable,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -24,21 +24,16 @@ export class User extends EntityBase {
   name: string;
 
   @Column({ default: 3 })
-  roleId;
+  roleId: number;
 
   @ManyToOne(() => Role, (role) => role.users)
-  @JoinTable({ name: 'roleId' })
+  @JoinColumn({ name: 'roleId' })
   role: Role;
 
-  @ManyToOne(() => Pool, (pool) => pool.creator)
+  @OneToMany(() => Pool, (pool) => pool.creator)
   poolsCreated: Pool[];
 
   @ManyToMany(() => Pool, (pool) => pool.participants)
-  @JoinTable({
-    name: 'pool_participants',
-    joinColumn: { name: 'userId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'poolId', referencedColumnName: 'id' },
-  })
   pools: Pool[];
 
   @OneToMany(() => Prediction, (prediction) => prediction.user)

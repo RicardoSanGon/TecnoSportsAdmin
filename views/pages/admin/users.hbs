@@ -1,0 +1,76 @@
+<!-- Gestión de Usuarios - Diseño Moderno con Colores Verdes -->
+<div class="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-users mr-3 text-primary-600"></i>
+            Gestión de <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">Usuarios</span>
+          </h1>
+          <p class="text-lg text-gray-600">Administrar usuarios, roles y permisos del sistema</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tabla de usuarios -->
+    <div class="bg-white rounded-lg shadow-md">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-semibold text-gray-800">Lista de Usuarios</h2>
+          <button id="addUserBtn" class="bg-gradient-to-r from-primary-500 to-primary-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+            <i class="fas fa-plus mr-2"></i>Nuevo Usuario
+          </button>
+        </div>
+      </div>
+
+      <div class="p-6 overflow-x-auto">
+        <table id="usersTable" class="w-full text-sm text-left">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th class="px-6 py-4 font-semibold">ID</th>
+              <th class="px-6 py-4 font-semibold">Nombre</th>
+              <th class="px-6 py-4 font-semibold">Email</th>
+              <th class="px-6 py-4 font-semibold">Rol</th>
+              <th class="px-6 py-4 font-semibold">Estado</th>
+              <th class="px-6 py-4 font-semibold">Registro</th>
+              <th class="px-6 py-4 font-semibold text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each users}}
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 text-sm font-medium text-gray-900">#{{this.id}}</td>
+              <td class="px-6 py-4">{{this.name}}</td>
+              <td class="px-6 py-4">{{this.email}}</td>
+              <td class="px-6 py-4">
+                {{#if this.roleId}}
+                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-primary-600 to-primary-800 text-white font-medium">👑 Admin</span>
+                {{else}}
+                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-primary-400 to-primary-600 text-white font-medium">👤 Usuario</span>
+                {{/if}}
+              </td>
+              <td class="px-6 py-4">
+                {{#if this.isActive}}
+                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white font-medium">✅ Activo</span>
+                {{else}}
+                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-red-500 to-red-600 text-white font-medium">❌ Inactivo</span>
+                {{/if}}
+              </td>
+              <td class="px-6 py-4">{{this.created_at}}</td>
+              <td class="px-6 py-4 text-center">
+                <div class="flex gap-2 justify-center">
+                  <button onclick="editUser({{this.id}})" class="p-2 text-primary-600 hover:text-white hover:bg-primary-600 rounded-lg"><i class="fas fa-edit"></i></button>
+                  <button onclick="deleteUser({{this.id}})" class="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -18,7 +18,38 @@ export class AuthController {
 
   @Post('signin')
   async signIn(@Body() body: { email: string; password: string }) {
-    return this.authService.signIn(body.email, body.password);
+    const result = await this.authService.signIn(body.email, body.password);
+
+    // Try to get user profile from database
+    try {
+      const userProfile = await this.authService.getUserProfile(result.user.id);
+      return {
+        ...result,
+        userProfile: {
+          id: userProfile.id,
+          email: userProfile.email,
+          name: userProfile.name,
+          roleId: userProfile.roleId,
+        }
+      };
+    } catch (error) {
+      console.log('User not in database, returning default profile');
+      // User not in database, return default profile
+      return {
+        ...result,
+        userProfile: {
+          id: result.user.id,
+          email: result.user.email,
+          name: result.user.user_metadata?.name || (result.user.email ? result.user.email.split('@')[0] : 'Usuario'),
+          roleId: 3, // Default role
+        }
+      };
+    }
+  }
+
+  @Post('login')
+  async login(@Body() body: { email: string; password: string }) {
+    return this.authService.login(body.email, body.password);
   }
 
   @UseGuards(SupabaseGuard)

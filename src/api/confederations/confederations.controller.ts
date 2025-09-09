@@ -17,30 +17,30 @@ export class ConfederationsController {
   constructor(private readonly confederationsService: ConfederationsService) {}
 
   @Post()
-  create(@Body() createConfederationDto: CreateConfederationDto) {
-    return this.confederationsService.create(createConfederationDto);
+  async create(@Body() createConfederationDto: CreateConfederationDto) {
+    return await this.confederationsService.create(createConfederationDto);
   }
 
   @Get()
-  findAll() {
-    return this.confederationsService.findAll();
+  async findAll() {
+    return await this.confederationsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.confederationsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.confederationsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateConfederationDto: UpdateConfederationDto,
   ) {
-    return this.confederationsService.update(+id, updateConfederationDto);
+    return await this.confederationsService.update(+id, updateConfederationDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.confederationsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.confederationsService.remove(+id);
   }
 }
