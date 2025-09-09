@@ -1,9 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ConfederationsService } from './confederations.service';
 import { CreateConfederationDto } from './dto/create-confederation.dto';
 import { UpdateConfederationDto } from './dto/update-confederation.dto';
+import { env } from 'env';
 
-@Controller('confederations')
+@Controller(`${env.api_prefix}confederations`)
 export class ConfederationsController {
   constructor(private readonly confederationsService: ConfederationsService) {}
 
@@ -23,7 +32,10 @@ export class ConfederationsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateConfederationDto: UpdateConfederationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateConfederationDto: UpdateConfederationDto,
+  ) {
     return this.confederationsService.update(+id, updateConfederationDto);
   }
 
