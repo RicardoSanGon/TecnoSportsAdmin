@@ -39,6 +39,9 @@
         <button onclick='navigateToPage("/admin/predictions")' class='nav-link px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 text-white hover:bg-primary-600 {{#if (eq currentPage 'predictions')}}bg-primary-600{{/if}}'>
           <i class='fas fa-brain mr-2'></i>Predicciones
         </button>
+        <button onclick='navigateToPage("/admin/confederations")' class='nav-link px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 text-white hover:bg-primary-600 {{#if (eq currentPage 'confederations')}}bg-primary-600{{/if}}'>
+          <i class='fas fa-brain mr-2'></i>Confederación
+        </button>
       </nav>
 
       <!-- Usuario y Menú -->
@@ -104,6 +107,9 @@
         </button>
         <button onclick='navigateToPage("/admin/predictions")' class='nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg text-white hover:bg-primary-600 {{#if (eq currentPage 'predictions')}}active{{/if}}'>
           <i class='fas fa-brain mr-3'></i>Predicciones
+        </button>
+        <button onclick='navigateToPage("/admin/predictions")' class='nav-link flex items-center px-4 py-3 text-sm font-medium rounded-lg text-white hover:bg-primary-600 {{#if (eq currentPage 'confederations')}}active{{/if}}'>
+          <i class='fas fa-brain mr-3'></i>Confederación
         </button>
       </nav>
 

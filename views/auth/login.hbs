@@ -300,12 +300,7 @@
                 }, 3000);
             }
 
-            // Check if user is already logged in
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                console.log('User already logged in, redirecting...');
-                window.location.href = '/admin/dashboard';
-            }
+            
 
             // Focus on email input
             emailInput.focus();

@@ -4,9 +4,12 @@ import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as exphbs from 'express-handlebars';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { UnauthorizedExceptionFilter } from './auth/unauthorized-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.enableCors();
 
   app.useStaticAssets(join(__dirname, '..', '..', 'public'));
 
@@ -21,6 +24,7 @@ async function bootstrap() {
       partialsDir: join(__dirname, '..', '..', 'views', 'partials'),
       defaultLayout: 'main',
       helpers: {
+        json: (context) => JSON.stringify(context),
         eq: (a: any, b: any) => a === b,
         ne: (a: any, b: any) => a !== b,
         lt: (a: any, b: any) => a < b,
@@ -36,6 +40,7 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new UnauthorizedExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);

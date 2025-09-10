@@ -4,7 +4,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { found, notFound, saved, updated } from 'src/utils/Responses';
+import { found, notFound, saved, updated } from 'src/Utils/Responses';
 
 const table = 'Role';
 

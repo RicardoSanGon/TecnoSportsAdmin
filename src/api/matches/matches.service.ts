@@ -5,7 +5,7 @@ import { Match } from './entities/match.entity';
 import { Team } from '../teams/entities/team.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { found, notFound, saved, updated } from 'src/utils/Responses';
+import { found, notFound, saved, updated } from 'src/Utils/Responses';
 
 const table = 'Match';
 

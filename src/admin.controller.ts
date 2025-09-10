@@ -99,12 +99,23 @@ export class AdminController {
   @Render('pages/admin/matches')
   async matches(@Req() req) {
     const user = await this.checkAdminRole(req);
-    const matches = await this.matchesService.findAll();
+    const matchesResult = await this.matchesService.findAll();
+    const teamsResult = await this.teamsService.findAll();
+    
+    const teamsMap = new Map(teamsResult.data.map(team => [team.id, team.name]));
+
+    const enrichedMatches = matchesResult.data.map(match => ({
+      ...match,
+      homeTeamName: teamsMap.get(match.homeTeamId) || 'Unknown',
+      awayTeamName: teamsMap.get(match.awayTeamId) || 'Unknown',
+    }));
+
     return {
       title: 'Gestión de Partidos - TecnoSports',
       currentPage: 'matches',
       user: user,
-      matches: matches.data,
+      matches: enrichedMatches,
+      teams: teamsResult.data, // Pass teams for the form dropdown
     };
   }
 
@@ -119,6 +130,20 @@ export class AdminController {
       currentPage: 'predictions',
       user: user,
       predictions: predictions.data,
+    };
+  }
+
+  @Get('confederations')
+  @UseGuards(SupabaseGuard)
+  @Render('pages/admin/confederations')
+  async confederations(@Req() req) {
+    const user = await this.checkAdminRole(req);
+    const confederations = await this.confederationsService.findAll();
+    return {
+      title: 'Gestión de Confederaciones - TecnoSports',
+      currentPage: 'confederations',
+      user: user,
+      confederations: confederations.data,
     };
   }
 

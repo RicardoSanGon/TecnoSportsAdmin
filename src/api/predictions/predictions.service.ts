@@ -7,7 +7,7 @@ import { Pool } from '../pools/entities/pool.entity';
 import { Match } from '../matches/entities/match.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { found, notFound, saved, updated } from 'src/utils/Responses';
+import { found, notFound, saved, updated } from 'src/Utils/Responses';
 
 const table = 'Prediction';
 

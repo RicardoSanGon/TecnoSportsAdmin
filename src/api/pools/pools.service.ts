@@ -6,7 +6,7 @@ import { Pool } from './entities/pool.entity';
 import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { found, notFound, saved, updated } from 'src/utils/Responses';
+import { found, notFound, saved, updated } from 'src/Utils/Responses';
 
 const table = 'Pool';
 

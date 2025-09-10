@@ -5,7 +5,7 @@ import { Controller, Post, Body, UseGuards, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SupabaseGuard } from './supabase.guard';
 import { CreateUserDto } from 'src/api/users/dto/create-user.dto';
-import { found, ok } from 'src/utils/Responses';
+import { found, ok } from 'src/Utils/Responses';
 
 @Controller('auth')
 export class AuthController {

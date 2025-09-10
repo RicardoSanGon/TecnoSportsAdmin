@@ -45,11 +45,11 @@
               <td class="px-6 py-4">{{this.name}}</td>
               <td class="px-6 py-4">{{this.email}}</td>
               <td class="px-6 py-4">
-                {{#if this.roleId}}
+                {{#eq this.roleId 2}}
                 <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-primary-600 to-primary-800 text-white font-medium">👑 Admin</span>
                 {{else}}
                 <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-primary-400 to-primary-600 text-white font-medium">👤 Usuario</span>
-                {{/if}}
+                {{/eq}}
               </td>
               <td class="px-6 py-4">
                 {{#if this.isActive}}
@@ -61,6 +61,9 @@
               <td class="px-6 py-4">{{this.created_at}}</td>
               <td class="px-6 py-4 text-center">
                 <div class="flex gap-2 justify-center">
+                  <button onclick="toggleAdmin({{this.id}})" class="p-2 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg" title="Toggle Admin">
+                    <i class="fas fa-user-shield"></i>
+                  </button>
                   <button onclick="editUser({{this.id}})" class="p-2 text-primary-600 hover:text-white hover:bg-primary-600 rounded-lg"><i class="fas fa-edit"></i></button>
                   <button onclick="deleteUser({{this.id}})" class="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg"><i class="fas fa-trash"></i></button>
                 </div>

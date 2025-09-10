@@ -34,7 +34,6 @@
             <th class="px-6 py-3">Estado</th>
             <th class="px-6 py-3">Cerrada</th>
             <th class="px-6 py-3">Fecha Inicio</th>
-            <th class="px-6 py-3">Acciones</th>
           </tr>
         </thead>
         <tbody id="poolsTableBody">
@@ -55,22 +54,6 @@
                 </span>
               </td>
               <td class="px-6 py-4">{{this.startDate}}</td>
-              <td class="px-6 py-4">
-                <div class="flex gap-2">
-                  <button onclick="viewRanking({{this.id}})" class="text-primary-600 hover:text-primary-800" title="Ver Ranking">
-                    <span class="material-icons">leaderboard</span>
-                  </button>
-                  <button onclick="editPool({{this.id}})" class="text-primary-600 hover:text-primary-800">
-                    <span class="material-icons">edit</span>
-                  </button>
-                  <button onclick="togglePoolStatus({{this.id}})" class="text-yellow-600 hover:text-yellow-800">
-                    <span class="material-icons">{{#if this.isActive}}block{{else}}check_circle{{/if}}</span>
-                  </button>
-                  <button onclick="deletePool({{this.id}})" class="text-red-600 hover:text-red-800">
-                    <span class="material-icons">delete</span>
-                  </button>
-                </div>
-              </td>
             </tr>
           {{/each}}
         </tbody>

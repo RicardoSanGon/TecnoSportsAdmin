@@ -14,22 +14,8 @@
     <link rel='stylesheet' href='https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
 
-  </head>
-  <body class='min-h-screen'>
-    {{> header}}
-    <main class='main-content'>
-      {{{body}}}
-    </main>
-
-    <!-- Scripts -->
-    <script src='https://code.jquery.com/jquery-3.7.0.min.js'></script>
-    <script src='https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js'></script>
-
-    <!-- Custom JavaScript -->
+    <!-- Global JavaScript Functions -->
     <script>
-      // Navigation function with token - Make it global immediately
       window.navigateToPage = function(path) {
         const token = localStorage.getItem('authToken');
         if (token) {
@@ -44,135 +30,192 @@
         localStorage.removeItem('user');
         window.location.href = '/admin/login';
       };
+    </script>
 
-      $(document).ready(function() {
-        // Sidebar Toggle
-        $('#sidebarToggle').on('click', function() {
-          $('#sidebar').removeClass('-translate-x-full');
-          $('#sidebarOverlay').removeClass('hidden');
-        });
+  </head>
+  <body class='min-h-screen'>
+    {{#unless hideHeader}}{{> header}}{{/unless}}
+    <main class='main-content'>
+      {{{body}}}
+    </main>
 
-        $('#closeSidebar, #sidebarOverlay').on('click', function() {
-          $('#sidebar').addClass('-translate-x-full');
-          $('#sidebarOverlay').addClass('hidden');
-        });
+    <!-- Generic Modal -->
+    <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full bg-gray-900 bg-opacity-50">
+        <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 border-b rounded-t">
+                    <h3 class="text-lg font-semibold text-gray-900" id="modal-title">
+                        <!-- Title will be set by JS -->
+                    </h3>
+                    <button type="button" id="modal-close-btn" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6" id="modal-body">
+                    <!-- Form content will be injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // User Menu Toggle
-        $('#userMenuBtn').on('click', function() {
-          $('#userMenu').toggleClass('hidden');
-        });
+    <!-- Scripts -->
+    <script src='https://code.jquery.com/jquery-3.7.0.min.js'></script>
+    <script>
+      // Sidebar Toggle
+      $('#sidebarToggle').on('click', function() {
+        $('#sidebar').removeClass('-translate-x-full');
+        $('#sidebarOverlay').removeClass('hidden');
+      });
 
-        // Close user menu when clicking outside
-        $(document).on('click', function(e) {
-          if (!$(e.target).closest('#userMenuBtn').length && !$(e.target).closest('#userMenu').length) {
-            $('#userMenu').addClass('hidden');
+      $('#closeSidebar, #sidebarOverlay').on('click', function() {
+        $('#sidebar').addClass('-translate-x-full');
+        $('#sidebarOverlay').addClass('hidden');
+      });
+
+      // User Menu Toggle
+      $('#userMenuBtn').on('click', function() {
+        $('#userMenu').toggleClass('hidden');
+      });
+
+      // Close user menu when clicking outside
+      $(document).on('click', function(e) {
+        if (!$(e.target).closest('#userMenuBtn').length && !$(e.target).closest('#userMenu').length) {
+          $('#userMenu').addClass('hidden');
+        }
+      });
+    </script>
+    <script src='https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js'></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+      const modal = document.getElementById('crud-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalBody = document.getElementById('modal-body');
+      const closeModalBtn = document.getElementById('modal-close-btn');
+
+      const showModal = () => modal.classList.remove('hidden');
+      const hideModal = () => modal.classList.add('hidden');
+
+      closeModalBtn.onclick = hideModal;
+
+      const openUserModal = (user) => {
+        modalTitle.textContent = user ? 'Editar Usuario' : 'Agregar Nuevo Usuario';
+        modalBody.innerHTML = `
+          <form id="user-form">
+            <input type="hidden" id="user-id" name="id" value="${user ? user.id : ''}">
+            <div class="grid grid-cols-1 gap-4">
+              <div>
+                <label for="user-name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input type="text" id="user-name" name="name" value="${user ? user.name : ''}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+              </div>
+              <div>
+                <label for="user-email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="user-email" name="email" value="${user ? user.email : ''}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+              </div>
+              <div>
+                <label for="user-password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="user-password" name="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" ${user ? '' : 'required'}>
+                ${user ? '<p class="text-xs text-gray-500">Dejar en blanco para no cambiar.</p>' : ''}
+              </div>
+              <div>
+                <label for="user-role" class="block text-sm font-medium text-gray-700">Rol</label>
+                <select id="user-role" name="roleId" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                  <option value="3" ${user && user.roleId === 3 ? 'selected' : ''}>Usuario</option>
+                  <option value="2" ${user && user.roleId === 2 ? 'selected' : ''}>Admin</option>
+                </select>
+              </div>
+            </div>
+            <div class="mt-6">
+              <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700">Guardar</button>
+            </div>
+          </form>
+        `;
+        showModal();
+
+        document.getElementById('user-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const id = e.target.id.value;
+          const name = e.target.name.value;
+          const email = e.target.email.value;
+          const password = e.target.password.value;
+          const roleId = e.target.roleId.value;
+          const token = localStorage.getItem('authToken');
+
+          const method = id ? 'PATCH' : 'POST';
+          const url = id ? `/api/users/${id}` : '/api/users';
+          let body = { name, email, roleId: parseInt(roleId) };
+          if (password) {
+            body.password = password;
+          }
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+              body: JSON.stringify(body),
+            });
+            if (!response.ok) throw new Error('Error al guardar el usuario');
+            window.location.reload();
+          } catch (error) {
+            console.error(error);
+            alert(error.message);
           }
         });
-        
-        // Page specific scripts
-        const page = '{{currentPage}}';
+      };
 
-        switch (page) {
-          case 'users':
-            let usersTable = $('#usersTable').DataTable({
-              language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-              }
-            });
-
-            $('#searchInput').on('keyup', function(){
-              usersTable.search($(this).val()).draw();
-            });
-
-            $('#roleFilter').on('change', function(){
-              usersTable.column(3).search($(this).val()).draw();
-            });
-
-            $('#statusFilter').on('change', function(){
-              usersTable.column(4).search($(this).val()).draw();
-            });
-            break;
-
-          case 'teams':
-            let teamsTable = $('#teamsTable').DataTable({
-              language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-              }
-            });
-
-            $('#searchInput').on('keyup', function(){
-              teamsTable.search($(this).val()).draw();
-            });
-
-            $('#confederationFilter').on('change', function(){
-              teamsTable.column(2).search($(this).val()).draw();
-            });
-
-            $('#statusFilter').on('change', function(){
-              teamsTable.column(4).search($(this).val()).draw();
-            });
-            break;
-
-          case 'pools':
-            let poolsTable = $('#poolsTable').DataTable({
-              language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-              }
-            });
-
-            $('#searchInput').on('keyup', function(){
-              poolsTable.search($(this).val()).draw();
-            });
-
-            $('#statusFilter').on('change', function(){
-              poolsTable.column(4).search($(this).val()).draw();
-            });
-
-            $('#closedFilter').on('change', function(){
-              poolsTable.column(5).search($(this).val()).draw();
-            });
-            break;
-
-          case 'matches':
-            let matchesTable = $('#matchesTable').DataTable({
-              language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-              }
-            });
-
-            $('#searchInput').on('keyup', function(){
-              matchesTable.search($(this).val()).draw();
-            });
-
-            $('#statusFilter').on('change', function(){
-              matchesTable.column(6).search($(this).val()).draw();
-            });
-
-            $('#weekFilter').on('keyup', function(){
-              matchesTable.column(4).search($(this).val()).draw();
-            });
-            break;
-
-          case 'predictions':
-            let predictionsTable = $('#predictionsTable').DataTable({
-              language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-              }
-            });
-
-            $('#searchInput').on('keyup', function(){
-              predictionsTable.search($(this).val()).draw();
-            });
-
-            $('#predictionFilter').on('change', function(){
-              predictionsTable.column(3).search($(this).val()).draw();
-            });
-
-            $('#pointsFilter').on('change', function(){
-              predictionsTable.column(4).search($(this).val()).draw();
-            });
-            break;
+      window.editUser = async (id) => {
+        const token = localStorage.getItem('authToken');
+        try {
+          const response = await fetch(`/api/users/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+          if (!response.ok) throw new Error('Error al obtener datos del usuario');
+          const result = await response.json();
+          openUserModal(result.data);
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
         }
+      };
+
+      window.deleteUser = async (id) => {
+        if (!confirm('¿Estás seguro de que quieres eliminar este usuario?')) return;
+        const token = localStorage.getItem('authToken');
+        try {
+          const response = await fetch(`/api/users/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (!response.ok) throw new Error('Error al eliminar el usuario');
+          window.location.reload();
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        }
+      };
+
+      window.toggleAdmin = async (id) => {
+        if (!confirm('¿Estás seguro de que quieres cambiar el rol de este usuario?')) return;
+        const token = localStorage.getItem('authToken');
+        try {
+          const response = await fetch(`/api/users/${id}/toggle-admin`, {
+            method: 'PATCH',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (!response.ok) throw new Error('Error al cambiar el rol del usuario');
+          window.location.reload();
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
+        }
+      };
+
+      $(document).ready(function() {
+        $('#usersTable').DataTable();
       });
     </script>
   </body>

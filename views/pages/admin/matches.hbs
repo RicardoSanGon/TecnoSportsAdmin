@@ -12,66 +12,722 @@
           </h1>
           <p class="text-lg text-gray-600">Administrar partidos y actualizar resultados</p>
         </div>
-      </div>
-    </div>
-  <!-- Tabla de partidos -->
-  <div class="bg-white rounded-lg shadow-md">
-    <div class="p-6 border-b border-gray-200">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-gray-800">Lista de Partidos</h2>
-        <button id="addMatchBtn" class="inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-700 transition-colors">
-          <span class="material-icons mr-2">add</span>
-          Nuevo Partido
+        <button id="add-match-btn" class="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors duration-200 shadow-lg">
+          <i class="fas fa-plus mr-2"></i>Agregar Partido
         </button>
       </div>
     </div>
 
-    <div class="p-6 overflow-x-auto">
-      <table id="matchesTable" class="w-full text-sm text-left">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th class="px-6 py-3">ID</th>
-            <th class="px-6 py-3">Local</th>
-            <th class="px-6 py-3">Visitante</th>
-            <th class="px-6 py-3">Marcador</th>
-            <th class="px-6 py-3">Semana</th>
-            <th class="px-6 py-3">Fecha</th>
-            <th class="px-6 py-3">Estado</th>
-            <th class="px-6 py-3">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="matchesTableBody">
-          {{#each matches}}
+    <!-- Tabla de partidos -->
+    <div class="bg-white rounded-lg shadow-lg">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-semibold text-gray-800">Lista de Partidos</h2>
+        </div>
+      </div>
+
+      <div class="p-6 overflow-x-auto">
+        <table id="matchesTable" class="w-full text-sm text-left">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-              <td class="px-6 py-4">{{this.id}}</td>
-              <td class="px-6 py-4 font-medium text-gray-900">{{this.homeTeamId}}</td>
-              <td class="px-6 py-4 font-medium text-gray-900">{{this.awayTeamId}}</td>
-              <td class="px-6 py-4 font-bold text-center">{{this.scoreHome}} - {{this.scoreAway}}</td>
-              <td class="px-6 py-4">{{this.weekNumber}}</td>
-              <td class="px-6 py-4">{{this.matchDate}}</td>
-              <td class="px-6 py-4">
-                <span class="px-2 py-1 text-xs rounded-full {{#if (eq this.status 'finished')}}bg-green-100 text-green-800{{else if (eq this.status 'in_progress')}}bg-yellow-100 text-yellow-800{{else}}bg-gray-100 text-gray-800{{/if}}">
-                  {{this.status}}
-                </span>
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex gap-2">
-                  <button onclick="editMatch({{this.id}})" class="text-primary-600 hover:text-primary-800">
-                    <span class="material-icons">edit</span>
-                  </button>
-                  <button onclick="updateResult({{this.id}})" class="text-green-600 hover:text-green-800">
-                    <span class="material-icons">sports_soccer</span>
-                  </button>
-                  <button onclick="deleteMatch({{this.id}})" class="text-red-600 hover:text-red-800">
-                    <span class="material-icons">delete</span>
-                  </button>
-                </div>
-              </td>
+              <th class="px-6 py-3">ID</th>
+              <th class="px-6 py-3">Local</th>
+              <th class="px-6 py-3">Visitante</th>
+              <th class="px-6 py-3">Marcador</th>
+              <th class="px-6 py-3">Semana</th>
+              <th class="px-6 py-3">Fecha</th>
+              <th class="px-6 py-3">Estado</th>
+              <th class="px-6 py-3 text-center">Acciones</th>
             </tr>
-          {{/each}}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {{#each matches}}
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium">#{{this.id}}</td>
+                <td class="px-6 py-4 font-semibold" data-home-team-id="{{this.homeTeamId}}">
+                  {{#if this.homeTeam}}
+                    {{this.homeTeam.name}}
+                  {{else}}
+                    ID: {{this.homeTeamId}}
+                  {{/if}}
+                </td>
+                <td class="px-6 py-4 font-semibold" data-away-team-id="{{this.awayTeamId}}">
+                  {{#if this.awayTeam}}
+                    {{this.awayTeam.name}}
+                  {{else}}
+                    ID: {{this.awayTeamId}}
+                  {{/if}}
+                </td>
+                <td class="px-6 py-4 font-bold text-center">
+                  <span class="bg-gray-100 px-3 py-1 rounded-lg">
+                    {{this.scoreHome}} - {{this.scoreAway}}
+                  </span>
+                </td>
+                <td class="px-6 py-4">Semana {{this.weekNumber}}</td>
+                <td class="px-6 py-4 text-gray-600">{{this.matchDate}}</td>
+                <td class="px-6 py-4">
+                  {{#if (eq this.status 'finished')}}
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Finalizado</span>
+                  {{else if (eq this.status 'in_progress')}}
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">En Progreso</span>
+                  {{else}}
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Pendiente</span>
+                  {{/if}}
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button onclick="editMatch({{this.id}})" class="p-2 text-primary-600 hover:text-white hover:bg-primary-600 rounded-lg transition-all duration-200" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="updateResult({{this.id}})" class="p-2 text-green-600 hover:text-white hover:bg-green-600 rounded-lg transition-all duration-200" title="Actualizar Resultado">
+                      <i class="fas fa-futbol"></i>
+                    </button>
+                    <button onclick="deleteMatch({{this.id}})" class="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200" title="Eliminar">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Modal para Matches - Centrado y más pequeño -->
+<div id="match-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-50">
+  <div class="relative w-full max-w-2xl bg-white rounded-lg shadow-xl">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 border-b rounded-t">
+      <h3 class="text-lg font-semibold text-gray-900" id="match-modal-title">
+        Agregar Nuevo Partido
+      </h3>
+      <button type="button" id="match-modal-close-btn" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Modal body -->
+    <div class="p-4">
+      <form id="match-form">
+        <input type="hidden" id="match-id" value="">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="home-team" class="block text-sm font-medium text-gray-700 mb-1">Equipo Local</label>
+            <select id="home-team" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+              <option value="">Cargando equipos...</option>
+            </select>
+          </div>
+          <div>
+            <label for="away-team" class="block text-sm font-medium text-gray-700 mb-1">Equipo Visitante</label>
+            <select id="away-team" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+              <option value="">Cargando equipos...</option>
+            </select>
+          </div>
+          <div>
+            <label for="match-date" class="block text-sm font-medium text-gray-700 mb-1">Fecha del Partido</label>
+            <input type="datetime-local" id="match-date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+          </div>
+          <div>
+            <label for="week-number" class="block text-sm font-medium text-gray-700 mb-1">Número de Semana</label>
+            <input type="number" id="week-number" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+          </div>
+          <div>
+            <label for="score-home" class="block text-sm font-medium text-gray-700 mb-1">Marcador Local</label>
+            <input type="number" id="score-home" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+          </div>
+          <div>
+            <label for="score-away" class="block text-sm font-medium text-gray-700 mb-1">Marcador Visitante</label>
+            <input type="number" id="score-away" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+          </div>
+          <div class="md:col-span-2">
+            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+            <select id="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+              <option value="pending">Pendiente</option>
+              <option value="in_progress">En Progreso</option>
+              <option value="finished">Finalizado</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-6 flex gap-3">
+          <button type="submit" class="flex-1 bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors duration-200">
+            <i class="fas fa-save mr-2"></i>Guardar
+          </button>
+          <button type="button" id="cancel-match-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Actualizar Resultado -->
+<div id="result-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-50">
+  <div class="relative w-full max-w-md bg-white rounded-lg shadow-xl">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 border-b rounded-t">
+      <h3 class="text-lg font-semibold text-gray-900">
+        Actualizar Resultado
+      </h3>
+      <button type="button" id="result-modal-close-btn" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Modal body -->
+    <div class="p-4">
+      <form id="result-form">
+        <input type="hidden" id="result-match-id" value="">
+        <div class="text-center mb-4">
+          <p class="text-gray-600" id="match-teams-display">Equipo vs Equipo</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-center">
+            <label id="home-team-label" class="block text-sm font-medium text-gray-700 mb-2">Equipo Local</label>
+            <input type="number" id="result-score-home" min="0" class="w-full px-3 py-2 text-center text-2xl font-bold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+          </div>
+          <div class="text-center">
+            <label id="away-team-label" class="block text-sm font-medium text-gray-700 mb-2">Equipo Visitante</label>
+            <input type="number" id="result-score-away" min="0" class="w-full px-3 py-2 text-center text-2xl font-bold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+          </div>
+        </div>
+        <div class="mt-4">
+          <label for="result-status" class="block text-sm font-medium text-gray-700 mb-1">Estado del Partido</label>
+          <select id="result-status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+            <option value="in_progress">En Progreso</option>
+            <option value="finished">Finalizado</option>
+          </select>
+        </div>
+        <div class="mt-6 flex gap-3">
+          <button type="submit" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors duration-200">
+            <i class="fas fa-check mr-2"></i>Actualizar
+          </button>
+          <button type="button" id="cancel-result-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Variables globales
+let teamsData = [];
+let currentMatchData = {};
+
+// Funciones globales para los botones en el HTML
+window.editMatch = function(id) {
+  console.log('Edit match called with ID:', id);
+  fetchMatchData(id);
+};
+
+window.updateResult = function(id) {
+  console.log('Update result called with ID:', id);
+  fetchMatchForResult(id);
+};
+
+window.deleteMatch = function(id) {
+  console.log('Delete match called with ID:', id);
+  if (confirm('¿Estás seguro de que quieres eliminar este partido? Esta acción no se puede deshacer.')) {
+    deleteMatchById(id);
+  }
+};
+
+// Funciones del modal principal
+function showMatchModal() {
+  const modal = document.getElementById('match-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    console.log('Match modal shown');
+  }
+}
+
+function hideMatchModal() {
+  const modal = document.getElementById('match-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    console.log('Match modal hidden');
+    
+    const form = document.getElementById('match-form');
+    if (form) {
+      form.reset();
+      document.getElementById('match-id').value = '';
+    }
+  }
+}
+
+// Funciones del modal de resultado
+function showResultModal() {
+  const modal = document.getElementById('result-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    console.log('Result modal shown');
+  }
+}
+
+function hideResultModal() {
+  const modal = document.getElementById('result-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    console.log('Result modal hidden');
+    
+    const form = document.getElementById('result-form');
+    if (form) {
+      form.reset();
+      document.getElementById('result-match-id').value = '';
+    }
+  }
+}
+
+// Cargar equipos
+async function loadTeams() {
+  const token = localStorage.getItem('authToken');
+  console.log('Loading teams...');
+  
+  try {
+    const response = await fetch('/api/teams', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    console.log('Teams response status:', response.status);
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Teams API response:', result);
+      
+      if (result.data && Array.isArray(result.data)) {
+        teamsData = result.data;
+        console.log('Teams loaded successfully:', teamsData);
+        populateTeamSelects();
+        updateTeamNames();
+      } else {
+        console.error('Invalid teams data structure received:', result);
+      }
+    } else {
+      console.error('Error response:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('Network error loading teams:', error);
+  }
+}
+
+// Función para obtener el nombre del equipo por ID
+function getTeamName(id) {
+  const team = teamsData.find(t => t.id == id);
+  return team ? team.name : `ID: ${id}`;
+}
+
+// Función para actualizar los nombres de equipos en la tabla
+function updateTeamNames() {
+  // Actualizar equipos locales
+  const homeCells = document.querySelectorAll('[data-home-team-id]');
+  homeCells.forEach(cell => {
+    const id = cell.getAttribute('data-home-team-id');
+    if (cell.textContent.trim().startsWith('ID:')) {
+      cell.textContent = getTeamName(id);
+    }
+  });
+
+  // Actualizar equipos visitantes
+  const awayCells = document.querySelectorAll('[data-away-team-id]');
+  awayCells.forEach(cell => {
+    const id = cell.getAttribute('data-away-team-id');
+    if (cell.textContent.trim().startsWith('ID:')) {
+      cell.textContent = getTeamName(id);
+    }
+  });
+}
+
+// Poblar los selects de equipos
+function populateTeamSelects() {
+  const homeSelect = document.getElementById('home-team');
+  const awaySelect = document.getElementById('away-team');
+  
+  if (!homeSelect || !awaySelect) {
+    console.error('Team selects not found');
+    return;
+  }
+  
+  // Limpiar opciones
+  homeSelect.innerHTML = '<option value="">Seleccionar equipo local...</option>';
+  awaySelect.innerHTML = '<option value="">Seleccionar equipo visitante...</option>';
+  
+  // Agregar equipos
+  teamsData.forEach(team => {
+    const homeOption = document.createElement('option');
+    homeOption.value = team.id;
+    homeOption.textContent = team.name;
+    homeSelect.appendChild(homeOption);
+    
+    const awayOption = document.createElement('option');
+    awayOption.value = team.id;
+    awayOption.textContent = team.name;
+    awaySelect.appendChild(awayOption);
+  });
+  
+  console.log('Team selects populated with', teamsData.length, 'options');
+}
+
+// Abrir modal para agregar/editar partido
+function openMatchModal(matchData = null) {
+  const title = document.getElementById('match-modal-title');
+  const homeTeamSelect = document.getElementById('home-team');
+  const awayTeamSelect = document.getElementById('away-team');
+  const matchDateInput = document.getElementById('match-date');
+  const weekNumberInput = document.getElementById('week-number');
+  const scoreHomeInput = document.getElementById('score-home');
+  const scoreAwayInput = document.getElementById('score-away');
+  const statusSelect = document.getElementById('status');
+  const idInput = document.getElementById('match-id');
+  
+  if (title) {
+    title.textContent = matchData ? 'Editar Partido' : 'Agregar Nuevo Partido';
+  }
+  
+  // Limpiar formulario
+  const form = document.getElementById('match-form');
+  if (form) form.reset();
+  
+  if (matchData) {
+    if (idInput) idInput.value = matchData.id || '';
+    if (homeTeamSelect) homeTeamSelect.value = matchData.homeTeamId || '';
+    if (awayTeamSelect) awayTeamSelect.value = matchData.awayTeamId || '';
+    if (matchDateInput && matchData.matchDate) {
+      // Convertir fecha a formato datetime-local
+      const date = new Date(matchData.matchDate);
+      matchDateInput.value = date.toISOString().slice(0, 16);
+    }
+    if (weekNumberInput) weekNumberInput.value = matchData.weekNumber || '';
+    if (scoreHomeInput) scoreHomeInput.value = matchData.scoreHome || 0;
+    if (scoreAwayInput) scoreAwayInput.value = matchData.scoreAway || 0;
+    if (statusSelect) statusSelect.value = matchData.status || 'pending';
+  } else {
+    if (idInput) idInput.value = '';
+    if (scoreHomeInput) scoreHomeInput.value = 0;
+    if (scoreAwayInput) scoreAwayInput.value = 0;
+    if (statusSelect) statusSelect.value = 'pending';
+  }
+  
+  showMatchModal();
+}
+
+// Abrir modal para actualizar resultado
+function openResultModal(matchData) {
+  const homeTeamLabel = document.getElementById('home-team-label');
+  const awayTeamLabel = document.getElementById('away-team-label');
+  const matchTeamsDisplay = document.getElementById('match-teams-display');
+  const scoreHomeInput = document.getElementById('result-score-home');
+  const scoreAwayInput = document.getElementById('result-score-away');
+  const statusSelect = document.getElementById('result-status');
+  const idInput = document.getElementById('result-match-id');
+  
+  if (matchData) {
+    const homeTeamName = getTeamName(matchData.homeTeamId);
+    const awayTeamName = getTeamName(matchData.awayTeamId);
+    
+    if (homeTeamLabel) homeTeamLabel.textContent = homeTeamName;
+    if (awayTeamLabel) awayTeamLabel.textContent = awayTeamName;
+    if (matchTeamsDisplay) matchTeamsDisplay.textContent = `${homeTeamName} vs ${awayTeamName}`;
+    if (idInput) idInput.value = matchData.id;
+    if (scoreHomeInput) scoreHomeInput.value = matchData.scoreHome || 0;
+    if (scoreAwayInput) scoreAwayInput.value = matchData.scoreAway || 0;
+    if (statusSelect) statusSelect.value = matchData.status === 'pending' ? 'in_progress' : matchData.status;
+  }
+  
+  showResultModal();
+}
+
+// Obtener datos de un partido específico
+async function fetchMatchData(id) {
+  const token = localStorage.getItem('authToken');
+  try {
+    const response = await fetch(`/api/matches/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Match data received:', result.data);
+      openMatchModal(result.data);
+    } else {
+      throw new Error('Error al obtener datos del partido');
+    }
+  } catch (error) {
+    console.error('Error fetching match:', error);
+    alert('Error al cargar los datos del partido: ' + error.message);
+  }
+}
+
+// Obtener datos del partido para actualizar resultado
+async function fetchMatchForResult(id) {
+  const token = localStorage.getItem('authToken');
+  try {
+    const response = await fetch(`/api/matches/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Match data for result received:', result.data);
+      openResultModal(result.data);
+    } else {
+      throw new Error('Error al obtener datos del partido');
+    }
+  } catch (error) {
+    console.error('Error fetching match for result:', error);
+    alert('Error al cargar los datos del partido: ' + error.message);
+  }
+}
+
+// Eliminar partido
+async function deleteMatchById(id) {
+  const token = localStorage.getItem('authToken');
+  try {
+    const response = await fetch(`/api/matches/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      alert('Partido eliminado exitosamente');
+      window.location.reload();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al eliminar el partido');
+    }
+  } catch (error) {
+    console.error('Error deleting match:', error);
+    alert('Error al eliminar el partido: ' + error.message);
+  }
+}
+
+// Guardar partido (crear o actualizar)
+async function saveMatch() {
+  const token = localStorage.getItem('authToken');
+  
+  const id = document.getElementById('match-id').value;
+  const homeTeamId = document.getElementById('home-team').value;
+  const awayTeamId = document.getElementById('away-team').value;
+  const matchDate = document.getElementById('match-date').value;
+  const weekNumber = document.getElementById('week-number').value;
+  const scoreHome = document.getElementById('score-home').value;
+  const scoreAway = document.getElementById('score-away').value;
+  const status = document.getElementById('status').value;
+  
+  console.log('Form values:', { id, homeTeamId, awayTeamId, matchDate, weekNumber, scoreHome, scoreAway, status });
+  
+  if (!homeTeamId || !awayTeamId || !matchDate || !weekNumber || !status) {
+    alert('Por favor completa todos los campos obligatorios');
+    return;
+  }
+  
+  if (homeTeamId === awayTeamId) {
+    alert('El equipo local y visitante no pueden ser el mismo');
+    return;
+  }
+  
+  const method = id ? 'PATCH' : 'POST';
+  const url = id ? `/api/matches/${id}` : '/api/matches';
+  const body = {
+    homeTeamId: parseInt(homeTeamId),
+    awayTeamId: parseInt(awayTeamId),
+    matchDate: new Date(matchDate).toISOString(),
+    weekNumber: parseInt(weekNumber),
+    scoreHome: parseInt(scoreHome) || 0,
+    scoreAway: parseInt(scoreAway) || 0,
+    status
+  };
+  
+  console.log('Sending data:', body);
+  
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+    
+    if (response.ok) {
+      alert('Partido guardado exitosamente');
+      hideMatchModal();
+      window.location.reload();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al guardar el partido');
+    }
+  } catch (error) {
+    console.error('Error saving match:', error);
+    alert('Error al guardar el partido: ' + error.message);
+  }
+}
+
+// Actualizar resultado del partido
+async function updateMatchResult() {
+  const token = localStorage.getItem('authToken');
+  
+  const id = document.getElementById('result-match-id').value;
+  const scoreHome = document.getElementById('result-score-home').value;
+  const scoreAway = document.getElementById('result-score-away').value;
+  const status = document.getElementById('result-status').value;
+  
+  console.log('Update result values:', { id, scoreHome, scoreAway, status });
+  
+  if (!id || scoreHome === '' || scoreAway === '' || !status) {
+    alert('Por favor completa todos los campos');
+    return;
+  }
+  
+  const body = {
+    scoreHome: parseInt(scoreHome),
+    scoreAway: parseInt(scoreAway),
+    status
+  };
+  
+  console.log('Updating result with data:', body);
+  
+  try {
+    const response = await fetch(`/api/matches/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+    
+    if (response.ok) {
+      alert('Resultado actualizado exitosamente');
+      hideResultModal();
+      window.location.reload();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al actualizar el resultado');
+    }
+  } catch (error) {
+    console.error('Error updating result:', error);
+    alert('Error al actualizar el resultado: ' + error.message);
+  }
+}
+
+// Inicialización cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM Content Loaded - Initializing matches page');
+  
+  // Cargar equipos
+  loadTeams();
+  
+  // Inicializar DataTable con jQuery
+  if (typeof $ !== 'undefined') {
+    $('#matchesTable').DataTable({
+      responsive: true,
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+      },
+      order: [[0, 'desc']] // Ordenar por ID descendente
+    });
+  }
+  
+  // Event listeners del modal principal
+  const addBtn = document.getElementById('add-match-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', function() {
+      console.log('Add match button clicked');
+      openMatchModal();
+    });
+  }
+  
+  const closeBtn = document.getElementById('match-modal-close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      console.log('Close button clicked');
+      hideMatchModal();
+    });
+  }
+  
+  const cancelBtn = document.getElementById('cancel-match-btn');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function() {
+      console.log('Cancel button clicked');
+      hideMatchModal();
+    });
+  }
+  
+  // Event listeners del modal de resultado
+  const resultCloseBtn = document.getElementById('result-modal-close-btn');
+  if (resultCloseBtn) {
+    resultCloseBtn.addEventListener('click', function() {
+      console.log('Result close button clicked');
+      hideResultModal();
+    });
+  }
+  
+  const cancelResultBtn = document.getElementById('cancel-result-btn');
+  if (cancelResultBtn) {
+    cancelResultBtn.addEventListener('click', function() {
+      console.log('Cancel result button clicked');
+      hideResultModal();
+    });
+  }
+  
+  // Click fuera del modal principal
+  const matchModal = document.getElementById('match-modal');
+  if (matchModal) {
+    matchModal.addEventListener('click', function(e) {
+      if (e.target === matchModal) {
+        console.log('Clicked outside match modal');
+        hideMatchModal();
+      }
+    });
+  }
+  
+  // Click fuera del modal de resultado
+  const resultModal = document.getElementById('result-modal');
+  if (resultModal) {
+    resultModal.addEventListener('click', function(e) {
+      if (e.target === resultModal) {
+        console.log('Clicked outside result modal');
+        hideResultModal();
+      }
+    });
+  }
+  
+  // Formulario principal
+  const matchForm = document.getElementById('match-form');
+  if (matchForm) {
+    matchForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      console.log('Match form submitted');
+      saveMatch();
+    });
+  }
+  
+  // Formulario de resultado
+  const resultForm = document.getElementById('result-form');
+  if (resultForm) {
+    resultForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      console.log('Result form submitted');
+      updateMatchResult();
+    });
+  }
+  
+  console.log('All match event listeners attached');
+});
+</script>

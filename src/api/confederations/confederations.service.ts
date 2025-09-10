@@ -4,7 +4,7 @@ import { UpdateConfederationDto } from './dto/update-confederation.dto';
 import { Confederation } from './entities/confederation.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { found, notFound, saved, updated } from 'src/utils/Responses';
+import { found, notFound, saved, updated } from 'src/Utils/Responses';
 
 const table = 'Confederation';
 
