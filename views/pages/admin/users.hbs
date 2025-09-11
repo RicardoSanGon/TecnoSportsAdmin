@@ -7,21 +7,19 @@
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-4xl font-bold text-gray-900 mb-2">
-            <i class="fas fa-users mr-3 text-primary-600"></i>
+            <i class="fas fa-users-cog mr-3 text-primary-600"></i>
             Gestión de <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">Usuarios</span>
           </h1>
-          <p class="text-lg text-gray-600">Administrar usuarios, roles y permisos del sistema</p>
+          <p class="text-lg text-gray-600">Administrar usuarios y sus roles en el sistema</p>
         </div>
       </div>
     </div>
+
     <!-- Tabla de usuarios -->
-    <div class="bg-white rounded-lg shadow-md">
+    <div class="bg-white rounded-lg shadow-lg">
       <div class="p-6 border-b border-gray-200">
         <div class="flex justify-between items-center">
           <h2 class="text-xl font-semibold text-gray-800">Lista de Usuarios</h2>
-          <button id="addUserBtn" class="bg-gradient-to-r from-primary-500 to-primary-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-            <i class="fas fa-plus mr-2"></i>Nuevo Usuario
-          </button>
         </div>
       </div>
 
@@ -29,46 +27,50 @@
         <table id="usersTable" class="w-full text-sm text-left">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-              <th class="px-6 py-4 font-semibold">ID</th>
-              <th class="px-6 py-4 font-semibold">Nombre</th>
-              <th class="px-6 py-4 font-semibold">Email</th>
-              <th class="px-6 py-4 font-semibold">Rol</th>
-              <th class="px-6 py-4 font-semibold">Estado</th>
-              <th class="px-6 py-4 font-semibold">Registro</th>
-              <th class="px-6 py-4 font-semibold text-center">Acciones</th>
+              <th class="px-6 py-3">ID</th>
+              <th class="px-6 py-3">Nombre</th>
+              <th class="px-6 py-3">Email</th>
+              <th class="px-6 py-3">Rol</th>
+              <th class="px-6 py-3">Estado</th>
+              <th class="px-6 py-3">Fecha de Registro</th>
+              <th class="px-6 py-3 text-center">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {{#each users}}
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 text-sm font-medium text-gray-900">#{{this.id}}</td>
-              <td class="px-6 py-4">{{this.name}}</td>
-              <td class="px-6 py-4">{{this.email}}</td>
-              <td class="px-6 py-4">
-                {{#eq this.roleId 2}}
-                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-primary-600 to-primary-800 text-white font-medium">👑 Admin</span>
-                {{else}}
-                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-primary-400 to-primary-600 text-white font-medium">👤 Usuario</span>
-                {{/eq}}
-              </td>
-              <td class="px-6 py-4">
-                {{#if this.isActive}}
-                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white font-medium">✅ Activo</span>
-                {{else}}
-                <span class="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-red-500 to-red-600 text-white font-medium">❌ Inactivo</span>
-                {{/if}}
-              </td>
-              <td class="px-6 py-4">{{this.created_at}}</td>
-              <td class="px-6 py-4 text-center">
-                <div class="flex gap-2 justify-center">
-                  <button onclick="toggleAdmin({{this.id}})" class="p-2 text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg" title="Toggle Admin">
-                    <i class="fas fa-user-shield"></i>
-                  </button>
-                  <button onclick="editUser({{this.id}})" class="p-2 text-primary-600 hover:text-white hover:bg-primary-600 rounded-lg"><i class="fas fa-edit"></i></button>
-                  <button onclick="deleteUser({{this.id}})" class="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg"><i class="fas fa-trash"></i></button>
-                </div>
-              </td>
-            </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 font-medium">#{{this.id}}</td>
+                <td class="px-6 py-4 font-semibold">{{this.name}}</td>
+                <td class="px-6 py-4 text-gray-600">{{this.email}}</td>
+                <td class="px-6 py-4">
+                  {{#if (eq this.roleId 2)}}
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-primary-100 text-primary-800">Admin</span>
+                  {{else}}
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Usuario</span>
+                  {{/if}}
+                </td>
+                <td class="px-6 py-4">
+                  {{#if this.isActive}}
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Activo</span>
+                  {{else}}
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Inactivo</span>
+                  {{/if}}
+                </td>
+                <td class="px-6 py-4 text-gray-500">{{this.created_at}}</td>
+                <td class="px-6 py-4 text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button onclick="editUser({{this.id}})" class="p-2 text-primary-600 hover:text-white hover:bg-primary-600 rounded-lg transition-all duration-200" title="Editar Usuario">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="toggleAdminRole({{this.id}}, {{#if (eq this.roleId 2)}}true{{else}}false{{/if}})" class="p-2 {{#if (eq this.roleId 2)}}text-yellow-600 hover:bg-yellow-600{{else}}text-blue-600 hover:bg-blue-600{{/if}} hover:text-white rounded-lg transition-all duration-200" title="{{#if (eq this.roleId 2)}}Quitar Admin{{else}}Hacer Admin{{/if}}">
+                      <i class="fas fa-user-shield"></i>
+                    </button>
+                    <button onclick="deleteUser({{this.id}})" class="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200" title="Eliminar Usuario">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
             {{/each}}
           </tbody>
         </table>
@@ -77,3 +79,333 @@
   </div>
 </div>
 
+<!-- Modal para Editar Usuario -->
+<div id="user-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-50">
+  <div class="relative w-full max-w-lg bg-white rounded-lg shadow-xl">
+    <!-- Modal header -->
+    <div class="flex items-center justify-between p-4 border-b rounded-t">
+      <h3 class="text-lg font-semibold text-gray-900" id="user-modal-title">
+        Editar Usuario
+      </h3>
+      <button type="button" id="user-modal-close-btn" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- Modal body -->
+    <div class="p-4">
+      <form id="user-form">
+        <input type="hidden" id="user-id" value="">
+        <div class="space-y-4">
+          <div>
+            <label for="user-name" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+            <input type="text" id="user-name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+          </div>
+          <div>
+            <label for="user-email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+            <input type="email" id="user-email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+          </div>
+          <div>
+            <label for="user-role" class="block text-sm font-medium text-gray-700 mb-1">Rol del Usuario</label>
+            <select id="user-role" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+              <option value="3">Usuario</option>
+              <option value="2">Administrador</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-6 flex gap-3">
+          <button type="submit" class="flex-1 bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors duration-200">
+            <i class="fas fa-save mr-2"></i>Guardar Cambios
+          </button>
+          <button type="button" id="cancel-user-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Funciones globales para los botones en el HTML
+window.editUser = function(id) {
+  console.log('Edit user called with ID:', id);
+  fetchUserData(id);
+};
+
+window.deleteUser = function(id) {
+  console.log('Delete user called with ID:', id);
+  if (confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.')) {
+    deleteUserById(id);
+  }
+};
+
+window.toggleAdminRole = function(id, isAdmin) {
+  console.log('Toggle admin role called with ID:', id, 'isAdmin:', isAdmin);
+  const action = isAdmin ? 'quitarle el rol de administrador' : 'convertirlo en administrador';
+  if (confirm(`¿Estás seguro de que quieres ${action} a este usuario?`)) {
+    toggleAdminRoleById(id);
+  }
+};
+
+// Funciones del modal
+function showUserModal() {
+  const modal = document.getElementById('user-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    console.log('User modal shown');
+  }
+}
+
+function hideUserModal() {
+  const modal = document.getElementById('user-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    console.log('User modal hidden');
+    
+    const form = document.getElementById('user-form');
+    if (form) {
+      form.reset();
+      document.getElementById('user-id').value = '';
+    }
+  }
+}
+
+// Abrir modal para editar usuario
+function openUserModal(userData) {
+  if (!userData) return;
+  
+  const nameInput = document.getElementById('user-name');
+  const emailInput = document.getElementById('user-email');
+  const roleSelect = document.getElementById('user-role');
+  const idInput = document.getElementById('user-id');
+  
+  // Llenar formulario con datos del usuario
+  if (nameInput) nameInput.value = userData.name || '';
+  if (emailInput) emailInput.value = userData.email || '';
+  if (roleSelect) roleSelect.value = userData.roleId || '3';
+  if (idInput) idInput.value = userData.id || '';
+  
+  showUserModal();
+  
+  // Enfocar el primer campo
+  if (nameInput) {
+    setTimeout(() => nameInput.focus(), 100);
+  }
+}
+
+// Obtener datos de un usuario específico
+async function fetchUserData(id) {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Error de autenticación. Por favor, inicia sesión de nuevo.');
+    window.location.href = '/admin/login';
+    return;
+  }
+  
+  try {
+    const response = await fetch(`/api/users/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('User data received:', result.data);
+      openUserModal(result.data);
+    } else {
+      throw new Error('Error al obtener datos del usuario');
+    }
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    alert('Error al cargar los datos del usuario: ' + error.message);
+  }
+}
+
+// Eliminar usuario
+async function deleteUserById(id) {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Error de autenticación. Por favor, inicia sesión de nuevo.');
+    return;
+  }
+  
+  try {
+    const response = await fetch(`/api/users/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      alert('Usuario eliminado exitosamente');
+      window.location.reload();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al eliminar el usuario');
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    alert('Error al eliminar el usuario: ' + error.message);
+  }
+}
+
+// Cambiar rol de administrador
+async function toggleAdminRoleById(id) {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Error de autenticación. Por favor, inicia sesión de nuevo.');
+    return;
+  }
+  
+  try {
+    const response = await fetch(`/api/users/${id}/toggle-admin`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      alert('Rol de usuario actualizado exitosamente');
+      window.location.reload();
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al cambiar el rol del usuario');
+    }
+  } catch (error) {
+    console.error('Error toggling admin role:', error);
+    alert('Error al cambiar el rol: ' + error.message);
+  }
+}
+
+// Guardar cambios del usuario (solo edición)
+async function saveUser() {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Error de autenticación. Por favor, inicia sesión de nuevo.');
+    return;
+  }
+  
+  const id = document.getElementById('user-id').value;
+  const name = document.getElementById('user-name').value.trim();
+  const email = document.getElementById('user-email').value.trim();
+  const roleId = document.getElementById('user-role').value;
+  
+  console.log('Form values:', { id, name, email, roleId });
+  
+  if (!id || !name || !email || !roleId) {
+    alert('Por favor completa todos los campos obligatorios');
+    return;
+  }
+  
+  // Validar email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert('Por favor ingresa un email válido');
+    return;
+  }
+  
+  const body = {
+    name,
+    email,
+    roleId: parseInt(roleId)
+  };
+  
+  console.log('Sending data:', body);
+  
+  try {
+    const response = await fetch(`/api/users/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Save response:', result);
+      alert('Usuario actualizado exitosamente');
+      hideUserModal();
+      window.location.reload();
+    } else {
+      const errorData = await response.json();
+      console.error('Save error:', errorData);
+      throw new Error(errorData.message || 'Error al actualizar el usuario');
+    }
+  } catch (error) {
+    console.error('Error saving user:', error);
+    alert('Error al actualizar el usuario: ' + error.message);
+  }
+}
+
+// Inicialización cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM Content Loaded - Initializing users page');
+  
+  // Inicializar DataTable con jQuery
+  if (typeof $ !== 'undefined') {
+    $('#usersTable').DataTable({
+      responsive: true,
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+      },
+      order: [[0, 'desc']], // Ordenar por ID descendente
+      columnDefs: [
+        { orderable: false, targets: -1 } // Deshabilitar ordenación en la columna de acciones
+      ]
+    });
+  }
+  
+  // Event listeners del modal
+  const closeBtn = document.getElementById('user-modal-close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      console.log('Close button clicked');
+      hideUserModal();
+    });
+  }
+  
+  const cancelBtn = document.getElementById('cancel-user-btn');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function() {
+      console.log('Cancel button clicked');
+      hideUserModal();
+    });
+  }
+  
+  // Click fuera del modal
+  const modal = document.getElementById('user-modal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        console.log('Clicked outside modal');
+        hideUserModal();
+      }
+    });
+  }
+  
+  // Formulario
+  const form = document.getElementById('user-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      console.log('User form submitted');
+      saveUser();
+    });
+  }
+  
+  // Tecla Escape para cerrar modal
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('user-modal');
+      if (modal && !modal.classList.contains('hidden')) {
+        hideUserModal();
+      }
+    }
+  });
+  
+  console.log('All user event listeners attached');
+});
+</script>

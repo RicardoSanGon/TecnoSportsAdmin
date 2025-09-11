@@ -44,6 +44,13 @@ export class LeaderboardService {
     return this.leaderboardModel.findByIdAndDelete(id).exec();
   }
 
+  async calculateAllLeaderboards() {
+    const allPools = await this.poolRepo.find();
+    for (const pool of allPools) {
+      await this.calculatePoolLeaderboard(pool.id);
+    }
+  }
+
   async calculatePoolLeaderboard(poolId: number) {
     // Verificar que la pool existe
     const pool = await this.poolRepo.findOne({

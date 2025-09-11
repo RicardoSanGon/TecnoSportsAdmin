@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { LeaderboardService } from './leaderboard.service';
 import { env } from 'env';
 
@@ -11,18 +11,32 @@ export class LeaderboardController {
     return await this.leaderboardService.create(createLeaderboardDto);
   }
 
+  @Post('update-all')
+  async updateAllLeaderboards() {
+    await this.leaderboardService.calculateAllLeaderboards();
+    return { message: 'All leaderboards updated successfully.' };
+  }
+
   @Get()
   async findAll() {
+    await this.leaderboardService.calculateAllLeaderboards();
     return await this.leaderboardService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
+    const leaderboard = await this.leaderboardService.findOne(id);
+    if (!leaderboard) {
+      throw new NotFoundException(`Leaderboard with id ${id} not found`);
+    }
+    // Recalculate before returning
+    await this.leaderboardService.calculatePoolLeaderboard(leaderboard.poolId);
     return await this.leaderboardService.findOne(id);
   }
 
   @Get('pool/:poolId')
   async findByPool(@Param('poolId') poolId: string) {
+    await this.leaderboardService.calculatePoolLeaderboard(+poolId);
     return await this.leaderboardService.findByPool(+poolId);
   }
 

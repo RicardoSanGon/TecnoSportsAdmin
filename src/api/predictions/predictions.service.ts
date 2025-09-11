@@ -91,11 +91,17 @@ export class PredictionsService {
   }
 
   async findAll() {
-    return found(`${table}s`, await this.repo.find());
+    return found(
+      `${table}s`,
+      await this.repo.find({ relations: ['user', 'pool', 'match'] }),
+    );
   }
 
   async findOne(id: number) {
-    const prediction = await this.repo.findOne({ where: { id } });
+    const prediction = await this.repo.findOne({
+      where: { id },
+      relations: ['user', 'pool', 'match'],
+    });
     if (!prediction) {
       throw new NotFoundException(notFound(table, id));
     }

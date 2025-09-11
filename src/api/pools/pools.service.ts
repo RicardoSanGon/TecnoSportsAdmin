@@ -184,6 +184,7 @@ export class PoolsService {
           name: pool.creator.name,
           email: pool.creator.email
         },
+        participants: pool.participants.map(p => ({ id: p.id, name: p.name, email: p.email })),
         joinedAt: pool.created_at // Fecha aproximada de unión
       }))
     });
