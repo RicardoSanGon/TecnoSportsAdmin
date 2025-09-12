@@ -28,7 +28,7 @@ import { AuthModule } from './auth/auth.module';
       type: 'postgres',
       url: process.env.DATABASE_URL, // 👈 tomamos todo del .env
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       extra: {
         ssl: {
           rejectUnauthorized: false, // ⚡ ignora el certificado autofirmado

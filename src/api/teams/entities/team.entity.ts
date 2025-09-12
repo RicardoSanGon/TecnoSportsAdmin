@@ -8,11 +8,14 @@ export class Team extends EntityBase {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   logoUrl: string;
 
-  @Column()
+  @Column({ default: true })
   isActive: boolean;
+
+  @Column({ nullable: true })
+  confederationId: number;
 
   @ManyToOne(() => Confederation, (confederation) => confederation.teams)
   confederation: Confederation;

@@ -4,6 +4,7 @@ import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as exphbs from 'express-handlebars';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -27,6 +28,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalPipes(new ValidationPipe());
 
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   await app.listen(process.env.PORT ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
   console.log(`Static Assets: ${join(__dirname, '..', '..', 'public')}`);

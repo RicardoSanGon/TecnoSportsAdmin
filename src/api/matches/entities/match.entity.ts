@@ -7,11 +7,14 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 export class Match extends EntityBase {
   @Column()
   weekNumber: number;
-  @Column()
+
+  @Column({ nullable: true })
   scoreHome: number;
-  @Column()
+
+  @Column({ nullable: true })
   scoreAway: number;
-  @Column()
+
+  @Column({ default: 'pending' })
   status: string;
 
   @Column({ type: 'timestamp' })

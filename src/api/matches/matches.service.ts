@@ -1,26 +1,62 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Match } from './entities/match.entity';
+import { Repository } from 'typeorm';
+import { found, notFound, saved, updated } from 'src/utils/Responses';
+
+const table = 'Match';
 
 @Injectable()
 export class MatchesService {
-  create(createMatchDto: CreateMatchDto) {
-    return 'This action adds a new match';
+  constructor(
+    @InjectRepository(Match) private readonly repo: Repository<Match>,
+  ) {}
+
+  async create(createMatchDto: CreateMatchDto) {
+    return saved(table, await this.repo.save(createMatchDto));
   }
 
-  findAll() {
-    return `This action returns all matches`;
+  async findAll() {
+    return found(
+      `${table}es`,
+      await this.repo.find({
+        relations: {
+          homeTeam: { confederation: true },
+          awayTeam: { confederation: true },
+          predictions: { user: true },
+        },
+      }),
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} match`;
+  async findOne(id: number) {
+    const match = await this.repo.findOne({
+      where: { id },
+      relations: {
+        homeTeam: { confederation: true },
+        awayTeam: { confederation: true },
+        predictions: { user: true },
+      },
+    });
+
+    if (!match) throw new NotFoundException(notFound(table, id));
+
+    return found(table, match);
   }
 
-  update(id: number, updateMatchDto: UpdateMatchDto) {
-    return `This action updates a #${id} match`;
-  }
+  async update(id: number, updateMatchDto: UpdateMatchDto) {
+    const match = await this.repo.findOne({
+      where: { id },
+      relations: {
+        homeTeam: { confederation: true },
+        awayTeam: { confederation: true },
+      },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} match`;
+    if (!match) throw new NotFoundException(notFound(table, id));
+    Object.assign(match, updateMatchDto);
+    return updated(table, await this.repo.save(match));
   }
 }
